@@ -5,9 +5,9 @@ export async function execute(this: IExecuteFunctions): Promise<any> {
     const credentials = await this.getCredentials('eKyteApi');
     const apiKey = credentials.apiKey as string;
     const companyId = credentials.companyId as string;
-    const userEmail = credentials.userEmail as string;
+    const userEmail = this.getNodeParameter('userEmail', 0) as string;
 
-    const baseUrl = 'https://api.ekyte.com/zapier';
+    const baseUrl = 'https://apistaging.ekyte.com/zapier';
 
     const credentialParams = {
         apiKey: apiKey,
@@ -24,7 +24,11 @@ export async function execute(this: IExecuteFunctions): Promise<any> {
             });
 
         case 'create':
-            const boardData = this.getNodeParameter('boardData', 0) as object;
+            const boardData = {
+                Title: this.getNodeParameter('title', 0) as string,
+                Description: this.getNodeParameter('description', 0) as string,
+            };
+
             return await this.helpers.request({
                 method: 'POST',
                 url: `${baseUrl}/boards`,

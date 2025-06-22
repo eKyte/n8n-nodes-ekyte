@@ -36,7 +36,7 @@ export class EKyte implements INodeType {
       },
     ],
     requestDefaults: {
-      baseURL: 'https://api.ekyte.com/zapier',
+      baseURL: 'https://apistaging.ekyte.com/zapier',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -108,8 +108,8 @@ export class EKyte implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Create a new task',
-            action: 'Create a task',
+            description: 'Create a new eKyte task',
+            action: 'Create task',
           },
         ],
         default: 'getAll',
@@ -135,8 +135,8 @@ export class EKyte implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Create a new project',
-            action: 'Create a project',
+            description: 'Create a new eKyte project',
+            action: 'Create project',
           },
         ],
         default: 'getCreated',
@@ -164,6 +164,12 @@ export class EKyte implements INodeType {
             value: 'getChanges',
             description: 'Get tickets with changes',
             action: 'Get tickets with changes',
+          },
+          {
+            name: 'Create',
+            value: 'create',
+            description: 'Create a new eKyte ticket',
+            action: 'Create ticket',
           },
         ],
         default: 'getConcluded',
@@ -210,8 +216,8 @@ export class EKyte implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Create a new board',
-            action: 'Create a board',
+            description: 'Create a new eKyte board',
+            action: 'Create board',
           },
         ],
         default: 'getAll',
@@ -237,8 +243,8 @@ export class EKyte implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Create a new workspace',
-            action: 'Create a workspace',
+            description: 'Create a new eKyte workspace',
+            action: 'Create workspace',
           },
         ],
         default: 'getAll',
@@ -258,13 +264,26 @@ export class EKyte implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Create a new note',
-            action: 'Create a note',
+            description: 'Create a new eKyte note',
+            action: 'Create note',
           },
         ],
         default: 'create',
       },
       // Common Parameters
+      {
+        displayName: 'User Email',
+        name: 'userEmail',
+        type: 'string',
+        required: true,
+        default: '',
+        description: 'The user email for eKyte operations',
+        displayOptions: {
+          show: {
+            resource: ['tasks', 'projects', 'tickets', 'notifications', 'boards', 'workspaces', 'notes'],
+          },
+        },
+      },
       // Task Creation Parameters
       {
         displayName: 'Title',
@@ -394,6 +413,105 @@ export class EKyte implements INodeType {
         displayOptions: {
           show: {
             resource: ['projects'],
+            operation: ['create'],
+          },
+        },
+      },
+      {
+        displayName: 'Workspace ID',
+        name: 'workspaceId',
+        type: 'string',
+        required: true,
+        default: '',
+        description: 'Workspace ID for the project',
+        displayOptions: {
+          show: {
+            resource: ['projects'],
+            operation: ['create'],
+          },
+        },
+      },
+      // Ticket Creation Parameters
+      {
+        displayName: 'Ticket Title',
+        name: 'title',
+        type: 'string',
+        required: true,
+        default: '',
+        displayOptions: {
+          show: {
+            resource: ['tickets'],
+            operation: ['create'],
+          },
+        },
+      },
+      {
+        displayName: 'Ticket Description',
+        name: 'description',
+        type: 'string',
+        required: true,
+        default: '',
+        displayOptions: {
+          show: {
+            resource: ['tickets'],
+            operation: ['create'],
+          },
+        },
+      },
+      {
+        displayName: 'Priority',
+        name: 'priority',
+        type: 'options',
+        options: [
+          {
+            name: 'Low',
+            value: 'low',
+          },
+          {
+            name: 'Medium',
+            value: 'medium',
+          },
+          {
+            name: 'High',
+            value: 'high',
+          },
+          {
+            name: 'Critical',
+            value: 'critical',
+          },
+        ],
+        default: 'medium',
+        description: 'Ticket priority',
+        displayOptions: {
+          show: {
+            resource: ['tickets'],
+            operation: ['create'],
+          },
+        },
+      },
+      {
+        displayName: 'Project ID',
+        name: 'projectId',
+        type: 'number',
+        required: true,
+        default: '',
+        description: 'Project ID for the ticket',
+        displayOptions: {
+          show: {
+            resource: ['tickets'],
+            operation: ['create'],
+          },
+        },
+      },
+      {
+        displayName: 'Assigned User Email',
+        name: 'assignedUserEmail',
+        type: 'string',
+        default: '',
+        description: 'Email of the user assigned to the ticket (optional)',
+        displayOptions: {
+          show: {
+            resource: ['tickets'],
             operation: ['create'],
           },
         },

@@ -27,13 +27,5 @@ export class EKyteApi implements ICredentialType {
             required: true,
             description: 'The Company ID for eKyte authentication',
         },
-        {
-            displayName: 'User Email',
-            name: 'userEmail',
-            type: 'string',
-            default: '',
-            required: true,
-            description: 'The User Email for eKyte authentication',
-        },
     ];
 }
