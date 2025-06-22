@@ -38,7 +38,18 @@
       "dist/credentials/EKyteApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/EKyte/EKyte.node.js"
+      "dist/nodes/EKyte/EKyteTasksAction.node.js",
+      "dist/nodes/EKyte/EKyteProjectsAction.node.js",
+      "dist/nodes/EKyte/EKyteTicketsAction.node.js",
+      "dist/nodes/EKyte/EKyteBoardsAction.node.js",
+      "dist/nodes/EKyte/EKyteWorkspacesAction.node.js",
+      "dist/nodes/EKyte/EKyteNotesAction.node.js",
+      "dist/nodes/EKyte/EKyteTasksTrigger.node.js",
+      "dist/nodes/EKyte/EKyteProjectsTrigger.node.js",
+      "dist/nodes/EKyte/EKyteTicketsTrigger.node.js",
+      "dist/nodes/EKyte/EKyteNotificationsTrigger.node.js",
+      "dist/nodes/EKyte/EKyteBoardsTrigger.node.js",
+      "dist/nodes/EKyte/EKyteWorkspacesTrigger.node.js"
     ]
   },
   "devDependencies": {
