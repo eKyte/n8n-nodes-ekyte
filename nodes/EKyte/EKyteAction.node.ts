@@ -77,6 +77,12 @@ export class EKyteAction implements INodeType {
             action: 'Create workspace',
           },
           {
+            name: 'Get Boards',
+            value: 'getBoards',
+            description: 'Get boards from eKyte',
+            action: 'Get boards',
+          },
+          {
             name: 'Get Notifications',
             value: 'getNotifications',
             description: 'Get notifications from eKyte',
@@ -112,6 +118,12 @@ export class EKyteAction implements INodeType {
             description: 'Get tickets that were closed in the last 15 minutes',
             action: 'Get tickets closed',
           },
+          {
+            name: 'Get Workspaces',
+            value: 'getWorkspaces',
+            description: 'Get workspaces from eKyte',
+            action: 'Get workspaces',
+          },
         ],
         default: 'createTask',
       },
@@ -124,7 +136,7 @@ export class EKyteAction implements INodeType {
         description: 'The user email for eKyte operations',
         displayOptions: {
           show: {
-            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote', 'createWorkspace'],
+            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote', 'createWorkspace', 'getNotifications'],
           },
         },
       },
@@ -490,8 +502,6 @@ export class EKyteAction implements INodeType {
 
     const baseUrl = 'https://apistaging.ekyte.com/zapier';
 
-    // Check if operation is GET (doesn't need UserEmail)
-    const isGetOperation = ['getNotifications', 'getProjects', 'getTasks', 'getTasksPhase', 'getTicketsChanged', 'getTicketsClosed'].includes(operation);
 
     let credentialParams: any = {
       apiKey: apiKey,
@@ -499,10 +509,7 @@ export class EKyteAction implements INodeType {
     };
 
     let userEmail = '';
-    if (!isGetOperation) {
-      userEmail = this.getNodeParameter('userEmail', 0) as string;
-      credentialParams.UserEmail = userEmail;
-    }
+
 
     try {
       let returnData: INodeExecutionData[] = [];
@@ -513,6 +520,7 @@ export class EKyteAction implements INodeType {
 
       switch (operation) {
         case 'createTask':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/tasks`;
           requestBody = {
             UserEmail: userEmail,
@@ -531,6 +539,8 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'createProject':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/projects`;
           requestBody = {
             Name: this.getNodeParameter('projectName', 0) as string,
@@ -543,6 +553,7 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'createTicket':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/tickets`;
           requestBody = {
             UserEmail: userEmail,
@@ -559,6 +570,7 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'createBoard':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/boards`;
           requestBody = {
             Title: this.getNodeParameter('boardTitle', 0) as string,
@@ -568,6 +580,8 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'createWorkspace':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/workspaces`;
           requestBody = {
             Name: this.getNodeParameter('workspaceName', 0) as string,
@@ -577,6 +591,8 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'createNote':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/notes`;
           requestBody = {
             PlanId: this.getNodeParameter('planId', 0) as number,
@@ -588,15 +604,44 @@ export class EKyteAction implements INodeType {
           break;
 
         case 'getNotifications':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/polling/notifications`;
           result = await this.helpers.request({
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
+            qs: credentialParams
           });
-          returnData = [{
-            json: result,
-          }];
+          const notifications = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = notifications.map((notification: any) => ({
+            json: notification,
+          }));
+          return [returnData];
+
+        case 'getBoards':
+          endpoint = `${baseUrl}/polling/boards`;
+          result = await this.helpers.request({
+            method: 'GET',
+            url: endpoint,
+            qs: credentialParams
+          });
+          const boards = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = boards.map((board: any) => ({
+            json: board,
+          }));
+          return [returnData];
+
+        case 'getWorkspaces':
+          endpoint = `${baseUrl}/polling/workspaces`;
+          result = await this.helpers.request({
+            method: 'GET',
+            url: endpoint,
+            qs: credentialParams
+          });
+          const workspaces = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = workspaces.map((workspace: {id: number, name: string}) => ({
+            json: workspace,
+          }));
           return [returnData];
 
         case 'getProjects':
@@ -606,9 +651,10 @@ export class EKyteAction implements INodeType {
             url: endpoint,
             qs: credentialParams,
           });
-          returnData = [{
-            json: result,
-          }];
+          const projects = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = projects.map((project: any) => ({
+            json: project,
+          }));
           return [returnData];
 
         case 'getTasks':
@@ -618,9 +664,10 @@ export class EKyteAction implements INodeType {
             url: endpoint,
             qs: credentialParams,
           });
-          returnData = [{
-            json: result,
-          }];
+          const tasks = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = tasks.map((task: any) => ({
+            json: task,
+          }));
           return [returnData];
 
         case 'getTasksPhase':
@@ -630,9 +677,10 @@ export class EKyteAction implements INodeType {
             url: endpoint,
             qs: credentialParams,
           });
-          returnData = [{
-            json: result,
-          }];
+          const tasksPhase = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = tasksPhase.map((task: any) => ({
+            json: task,
+          }));
           return [returnData];
 
         case 'getTicketsChanged':
@@ -642,9 +690,10 @@ export class EKyteAction implements INodeType {
             url: endpoint,
             qs: credentialParams,
           });
-          returnData = [{
-            json: result,
-          }];
+          const ticketsChanged = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = ticketsChanged.map((ticket: any) => ({
+            json: ticket,
+          }));
           return [returnData];
 
         case 'getTicketsClosed':
@@ -654,9 +703,10 @@ export class EKyteAction implements INodeType {
             url: endpoint,
             qs: credentialParams,
           });
-          returnData = [{
-            json: result,
-          }];
+          const ticketsClosed = typeof result === 'string' ? JSON.parse(result) : result;
+          returnData = ticketsClosed.map((ticket: any) => ({
+            json: ticket,
+          }));
           return [returnData];
 
         default:
