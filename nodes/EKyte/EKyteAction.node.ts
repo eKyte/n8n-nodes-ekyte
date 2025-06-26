@@ -116,7 +116,7 @@ export class EKyteAction implements INodeType {
         default: 'createTask',
       },
       {
-        displayName: 'User Email',
+        displayName: 'E-mail',
         name: 'userEmail',
         type: 'string',
         required: true,
@@ -130,7 +130,7 @@ export class EKyteAction implements INodeType {
       },
       // Task fields
       {
-        displayName: 'Title',
+        displayName: 'Titulo',
         name: 'title',
         type: 'string',
         required: true,
@@ -143,19 +143,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Workspace ID',
-        name: 'workspaceId',
-        type: 'number',
-        required: true,
-        default: 0,
-        displayOptions: {
-          show: {
-            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote'],
-          },
-        },
-      },
-      {
-        displayName: 'Task Type ID',
+        displayName: 'Id Tipo Tarefa',
         name: 'ctcTaskTypeId',
         type: 'number',
         required: true,
@@ -167,7 +155,78 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Due Date',
+        displayName: 'Id Workspace',
+        name: 'workspaceId',
+        type: 'number',
+        required: true,
+        default: 0,
+        displayOptions: {
+          show: {
+            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote', 'createWorkspace'],
+          },
+        },
+      },
+      {
+        displayName: 'Prioridade',
+        name: 'priorityGroup',
+        type: 'number',
+        required: true,
+        default: 0,
+        description: 'Priority group (0-100, where 0=Not prioritized, 1-25=Low, 26-50=Medium, 51-75=High, 76-100=Urgent)',
+        displayOptions: {
+          show: {
+            operation: ['createTask', 'createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'Quantidade de peças',
+        name: 'quantity',
+        type: 'number',
+        default: 0,
+        displayOptions: {
+          show: {
+            operation: ['createTask'],
+          },
+        },
+      },
+      {
+        displayName: 'Id Projeto',
+        name: 'ctcTaskProjectId',
+        type: 'number',
+        default: 0,
+        displayOptions: {
+          show: {
+            operation: ['createTask'],
+          },
+        },
+      },
+      {
+        displayName: 'Descrição',
+        name: 'description',
+        type: 'string',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote', 'createWorkspace'],
+          },
+        },
+      },
+      {
+        displayName: 'Iniciar em',
+        name: 'phaseStartDate',
+        type: 'dateTime',
+        required: true,
+        default: '',
+        description: 'Task start date',
+        displayOptions: {
+          show: {
+            operation: ['createTask'],
+          },
+        },
+      },
+      {
+        displayName: 'Concluir até',
         name: 'currentDueDate',
         type: 'dateTime',
         required: true,
@@ -180,22 +239,12 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Description',
-        name: 'description',
-        type: 'string',
-        default: '',
-        displayOptions: {
-          show: {
-            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote'],
-          },
-        },
-      },
-      {
-        displayName: 'Priority Group',
-        name: 'priorityGroup',
+        displayName: 'Esforço',
+        name: 'estimatedTime',
         type: 'number',
-        default: 0,
-        description: 'Priority group (0-100, where 0=Not prioritized, 1-25=Low, 26-50=Medium, 51-75=High, 76-100=Urgent)',
+        required: true,
+        default: 60,
+        description: 'Estimated time in minutes',
         displayOptions: {
           show: {
             operation: ['createTask'],
@@ -203,7 +252,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Plan Task',
+        displayName: 'Tarefa planejada',
         name: 'planTask',
         type: 'boolean',
         default: true,
@@ -216,7 +265,7 @@ export class EKyteAction implements INodeType {
       },
       // Project fields
       {
-        displayName: 'Project Name',
+        displayName: 'Titulo',
         name: 'projectName',
         type: 'string',
         required: true,
@@ -228,11 +277,10 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Project Type ID',
-        name: 'ctcProjectTypeId',
-        type: 'number',
-        required: true,
-        default: 0,
+        displayName: 'Identificação',
+        name: 'alias',
+        type: 'string',
+        default: '',
         displayOptions: {
           show: {
             operation: ['createProject'],
@@ -240,10 +288,20 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Start Date',
+        displayName: 'Tags',
+        name: 'tags',
+        type: 'string',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createProject'],
+          },
+        },
+      },
+      {
+        displayName: 'Data Início',
         name: 'startDate',
         type: 'dateTime',
-        required: true,
         default: '',
         description: 'Project start date',
         displayOptions: {
@@ -252,22 +310,9 @@ export class EKyteAction implements INodeType {
           },
         },
       },
-      {
-        displayName: 'End Date',
-        name: 'endDate',
-        type: 'dateTime',
-        required: true,
-        default: '',
-        description: 'Project end date',
-        displayOptions: {
-          show: {
-            operation: ['createProject'],
-          },
-        },
-      },
       // Ticket fields
       {
-        displayName: 'Subject',
+        displayName: 'Assunto',
         name: 'subject',
         type: 'string',
         required: true,
@@ -279,11 +324,67 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Ticket Type ID',
-        name: 'ctcTicketTypeId',
+        displayName: 'Tipo de ocorrência',
+        name: 'ticketType',
         type: 'number',
         required: true,
-        default: 0,
+        default: 1,
+        displayOptions: {
+          show: {
+            operation: ['createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'Privisto para',
+        name: 'expectDueDate',
+        type: 'dateTime',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'E-mail do solicitante',
+        name: 'requesterEmail',
+        type: 'string',
+        required: true,
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'Em cópia',
+        name: 'usersCC',
+        type: 'string',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'E-mail do responsável',
+        name: 'analystEmail',
+        type: 'string',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createTicket'],
+          },
+        },
+      },
+      {
+        displayName: 'Descrição',
+        name: 'message',
+        type: 'string',
+        default: '',
         displayOptions: {
           show: {
             operation: ['createTicket'],
@@ -292,8 +393,8 @@ export class EKyteAction implements INodeType {
       },
       // Board fields
       {
-        displayName: 'Board Name',
-        name: 'boardName',
+        displayName: 'Titulo',
+        name: 'boardTitle',
         type: 'string',
         required: true,
         default: '',
@@ -305,19 +406,7 @@ export class EKyteAction implements INodeType {
       },
       // Note fields
       {
-        displayName: 'Note Title',
-        name: 'noteTitle',
-        type: 'string',
-        required: true,
-        default: '',
-        displayOptions: {
-          show: {
-            operation: ['createNote'],
-          },
-        },
-      },
-      {
-        displayName: 'Plan ID',
+        displayName: 'Id Board',
         name: 'planId',
         type: 'number',
         required: true,
@@ -330,7 +419,30 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Category',
+        displayName: 'Titulo',
+        name: 'noteTitle',
+        type: 'string',
+        required: true,
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createNote'],
+          },
+        },
+      },
+      {
+        displayName: 'Conteúdo',
+        name: 'content',
+        type: 'string',
+        default: '',
+        displayOptions: {
+          show: {
+            operation: ['createNote'],
+          },
+        },
+      },
+      {
+        displayName: 'Categoria',
         name: 'category',
         type: 'string',
         required: true,
@@ -344,11 +456,22 @@ export class EKyteAction implements INodeType {
       },
       // Workspace fields
       {
-        displayName: 'Workspace Name',
+        displayName: 'Nome',
         name: 'workspaceName',
         type: 'string',
         required: true,
         default: '',
+        displayOptions: {
+          show: {
+            operation: ['createWorkspace'],
+          },
+        },
+      },
+      {
+        displayName: 'Id Squad',
+        name: 'squadId',
+        type: 'number',
+        default: 0,
         displayOptions: {
           show: {
             operation: ['createWorkspace'],
@@ -387,21 +510,22 @@ export class EKyteAction implements INodeType {
       let endpoint = '';
       let requestBody: any = {};
 
-      if (!isGetOperation) {
-        requestBody.UserEmail = userEmail;
-      }
 
       switch (operation) {
         case 'createTask':
           endpoint = `${baseUrl}/tasks`;
           requestBody = {
-            ...requestBody,
+            UserEmail: userEmail,
             Title: this.getNodeParameter('title', 0) as string,
-            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
             CtcTaskTypeId: this.getNodeParameter('ctcTaskTypeId', 0) as number,
-            CurrentDueDate: this.getNodeParameter('currentDueDate', 0) as string,
-            Description: this.getNodeParameter('description', 0) as string,
+            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
             PriorityGroup: this.getNodeParameter('priorityGroup', 0) as number,
+            Quantity: this.getNodeParameter('quantity', 0) as number,
+            CtcTaskProjectId: this.getNodeParameter('ctcTaskProjectId', 0) as number,
+            Description: this.getNodeParameter('description', 0) as string,
+            PhaseStartDate: this.getNodeParameter('phaseStartDate', 0) as string,
+            CurrentDueDate: this.getNodeParameter('currentDueDate', 0) as string,
+            EstimatedTime: this.getNodeParameter('estimatedTime', 0) as number,
             PlanTask: this.getNodeParameter('planTask', 0) as boolean,
           };
           break;
@@ -409,33 +533,35 @@ export class EKyteAction implements INodeType {
         case 'createProject':
           endpoint = `${baseUrl}/projects`;
           requestBody = {
-            ...requestBody,
             Name: this.getNodeParameter('projectName', 0) as string,
-            CtcProjectTypeId: this.getNodeParameter('ctcProjectTypeId', 0) as number,
-            StartDate: this.getNodeParameter('startDate', 0) as string,
-            EndDate: this.getNodeParameter('endDate', 0) as string,
+            Alias: this.getNodeParameter('alias', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
             WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
+            Tags: this.getNodeParameter('tags', 0) as string,
+            StartDate: this.getNodeParameter('startDate', 0) as string,
           };
           break;
 
         case 'createTicket':
           endpoint = `${baseUrl}/tickets`;
           requestBody = {
-            ...requestBody,
+            UserEmail: userEmail,
             Subject: this.getNodeParameter('subject', 0) as string,
-            TicketType: this.getNodeParameter('ctcTicketTypeId', 0) as number,
-            Message: this.getNodeParameter('description', 0) as string,
             WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
-            RequesterEmail: userEmail,
+            TicketType: this.getNodeParameter('ticketType', 0) as number,
+            ExpectDueDate: this.getNodeParameter('expectDueDate', 0) as string,
+            PriorityGroup: this.getNodeParameter('priorityGroup', 0) as number,
+            RequesterEmail: this.getNodeParameter('requesterEmail', 0) as string,
+            UsersCC: this.getNodeParameter('usersCC', 0) as string,
+            AnalystEmail: this.getNodeParameter('analystEmail', 0) as string,
+            Message: this.getNodeParameter('message', 0) as string,
           };
           break;
 
         case 'createBoard':
           endpoint = `${baseUrl}/boards`;
           requestBody = {
-            ...requestBody,
-            Title: this.getNodeParameter('boardName', 0) as string,
+            Title: this.getNodeParameter('boardTitle', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
             WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
           };
@@ -444,18 +570,19 @@ export class EKyteAction implements INodeType {
         case 'createWorkspace':
           endpoint = `${baseUrl}/workspaces`;
           requestBody = {
-            ...requestBody,
             Name: this.getNodeParameter('workspaceName', 0) as string,
+            Description: this.getNodeParameter('description', 0) as string,
+            SquadId: this.getNodeParameter('squadId', 0) as number,
           };
           break;
 
         case 'createNote':
           endpoint = `${baseUrl}/notes`;
           requestBody = {
-            ...requestBody,
-            Title: this.getNodeParameter('noteTitle', 0) as string,
-            Content: this.getNodeParameter('description', 0) as string,
             PlanId: this.getNodeParameter('planId', 0) as number,
+            Title: this.getNodeParameter('noteTitle', 0) as string,
+            Description: this.getNodeParameter('description', 0) as string,
+            Content: this.getNodeParameter('content', 0) as string,
             Category: this.getNodeParameter('category', 0) as string,
           };
           break;
@@ -539,7 +666,11 @@ export class EKyteAction implements INodeType {
       result = await this.helpers.request({
         method: 'POST',
         url: endpoint,
-        qs: credentialParams,
+        qs: {
+          apiKey: apiKey,
+          CompanyId: companyId,
+          UserEmail: userEmail,
+        },
         body: requestBody,
         headers: {
           'Content-Type': 'application/json',
