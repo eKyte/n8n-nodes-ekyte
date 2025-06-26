@@ -1,24 +1,26 @@
 {
-  "name": "n8n-nodes-<...>",
+  "name": "n8n-nodes-ekyte",
   "version": "0.1.0",
-  "description": "",
+  "description": "Custom n8n nodes for eKyte API integration",
   "keywords": [
-    "n8n-community-node-package"
+    "n8n-community-node-package",
+    "n8n-nodes-ekyte",
+    "ekyte"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/ekyte/n8n-nodes-ekyte#readme",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "eKyte Team",
+    "email": "dev@ekyte.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/ekyte/n8n-nodes-ekyte.git"
   },
   "engines": {
     "node": ">=20.15"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npx rimraf dist && tsc && gulp build:icons",
     "dev": "tsc --watch",
@@ -28,28 +30,33 @@
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
+      "dist/credentials/EKyteApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
+      "dist/nodes/EKyte/EKyteAction.node.js"
     ]
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
     "@typescript-eslint/parser": "~8.32.0",
     "eslint": "^8.57.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
     "gulp": "^5.0.0",
+    "gulp-cli": "^2.3.0",
     "prettier": "^3.5.3",
+    "rimraf": "^5.0.5",
     "typescript": "^5.8.2"
   },
-  "peerDependencies": {
-    "n8n-workflow": "*"
+  "dependencies": {
+    "n8n-core": "^1.98.0",
+    "n8n-workflow": "^1.96.0"
   }
 }
