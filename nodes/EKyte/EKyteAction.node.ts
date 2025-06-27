@@ -159,7 +159,7 @@ export class EKyteAction implements INodeType {
         name: 'ctcTaskTypeId',
         type: 'number',
         required: true,
-        default: 0,
+        default: null,
         displayOptions: {
           show: {
             operation: ['createTask'],
@@ -171,10 +171,10 @@ export class EKyteAction implements INodeType {
         name: 'workspaceId',
         type: 'number',
         required: true,
-        default: 0,
+        default: null,
         displayOptions: {
           show: {
-            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote', 'createWorkspace'],
+            operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote'],
           },
         },
       },
@@ -195,7 +195,7 @@ export class EKyteAction implements INodeType {
         displayName: 'Quantidade de peças',
         name: 'quantity',
         type: 'number',
-        default: 0,
+        default: null,
         displayOptions: {
           show: {
             operation: ['createTask'],
@@ -206,7 +206,7 @@ export class EKyteAction implements INodeType {
         displayName: 'Id Projeto',
         name: 'ctcTaskProjectId',
         type: 'number',
-        default: 0,
+        default: null,
         displayOptions: {
           show: {
             operation: ['createTask'],
@@ -340,7 +340,7 @@ export class EKyteAction implements INodeType {
         name: 'ticketType',
         type: 'number',
         required: true,
-        default: 1,
+        default: null,
         displayOptions: {
           show: {
             operation: ['createTicket'],
@@ -422,7 +422,7 @@ export class EKyteAction implements INodeType {
         name: 'planId',
         type: 'number',
         required: true,
-        default: 0,
+        default: null,
         description: 'Board/Plan ID where the note will be created',
         displayOptions: {
           show: {
@@ -483,7 +483,7 @@ export class EKyteAction implements INodeType {
         displayName: 'Id Squad',
         name: 'squadId',
         type: 'number',
-        default: 0,
+        default: null,
         displayOptions: {
           show: {
             operation: ['createWorkspace'],
@@ -522,14 +522,18 @@ export class EKyteAction implements INodeType {
         case 'createTask':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/tasks`;
+          const ctcTaskTypeId = this.getNodeParameter('ctcTaskTypeId', 0) as number;
+          const taskWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
+          const quantity = this.getNodeParameter('quantity', 0) as number;
+          const ctcTaskProjectId = this.getNodeParameter('ctcTaskProjectId', 0) as number;
           requestBody = {
             UserEmail: userEmail,
             Title: this.getNodeParameter('title', 0) as string,
-            CtcTaskTypeId: this.getNodeParameter('ctcTaskTypeId', 0) as number,
-            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
+            ...(ctcTaskTypeId && { CtcTaskTypeId: ctcTaskTypeId }),
+            ...(taskWorkspaceId && { WorkspaceId: taskWorkspaceId }),
             PriorityGroup: this.getNodeParameter('priorityGroup', 0) as number,
-            Quantity: this.getNodeParameter('quantity', 0) as number,
-            CtcTaskProjectId: this.getNodeParameter('ctcTaskProjectId', 0) as number,
+            ...(quantity && { Quantity: quantity }),
+            ...(ctcTaskProjectId && { CtcTaskProjectId: ctcTaskProjectId }),
             Description: this.getNodeParameter('description', 0) as string,
             PhaseStartDate: this.getNodeParameter('phaseStartDate', 0) as string,
             CurrentDueDate: this.getNodeParameter('currentDueDate', 0) as string,
@@ -542,11 +546,12 @@ export class EKyteAction implements INodeType {
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
 					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/projects`;
+          const projectWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
           requestBody = {
             Name: this.getNodeParameter('projectName', 0) as string,
             Alias: this.getNodeParameter('alias', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
-            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
+            ...(projectWorkspaceId && { WorkspaceId: projectWorkspaceId }),
             Tags: this.getNodeParameter('tags', 0) as string,
             StartDate: this.getNodeParameter('startDate', 0) as string,
           };
@@ -555,11 +560,13 @@ export class EKyteAction implements INodeType {
         case 'createTicket':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/tickets`;
+          const ticketWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
+          const ticketType = this.getNodeParameter('ticketType', 0) as number;
           requestBody = {
             UserEmail: userEmail,
             Subject: this.getNodeParameter('subject', 0) as string,
-            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
-            TicketType: this.getNodeParameter('ticketType', 0) as number,
+            ...(ticketWorkspaceId && { WorkspaceId: ticketWorkspaceId }),
+            ...(ticketType && { TicketType: ticketType }),
             ExpectDueDate: this.getNodeParameter('expectDueDate', 0) as string,
             PriorityGroup: this.getNodeParameter('priorityGroup', 0) as number,
             RequesterEmail: this.getNodeParameter('requesterEmail', 0) as string,
@@ -572,10 +579,11 @@ export class EKyteAction implements INodeType {
         case 'createBoard':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
           endpoint = `${baseUrl}/boards`;
+          const boardWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
           requestBody = {
             Title: this.getNodeParameter('boardTitle', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
-            WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
+            ...(boardWorkspaceId && { WorkspaceId: boardWorkspaceId }),
           };
           break;
 
@@ -583,10 +591,11 @@ export class EKyteAction implements INodeType {
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
 					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/workspaces`;
+          const squadId = this.getNodeParameter('squadId', 0) as number;
           requestBody = {
             Name: this.getNodeParameter('workspaceName', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
-            SquadId: this.getNodeParameter('squadId', 0) as number,
+            ...(squadId && { SquadId: squadId }),
           };
           break;
 
@@ -594,8 +603,9 @@ export class EKyteAction implements INodeType {
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
 					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/notes`;
+          const planId = this.getNodeParameter('planId', 0) as number;
           requestBody = {
-            PlanId: this.getNodeParameter('planId', 0) as number,
+            ...(planId && { PlanId: planId }),
             Title: this.getNodeParameter('noteTitle', 0) as string,
             Description: this.getNodeParameter('description', 0) as string,
             Content: this.getNodeParameter('content', 0) as string,
@@ -727,8 +737,9 @@ export class EKyteAction implements INodeType {
         },
       });
 
+      const parsedResult = typeof result === 'string' ? JSON.parse(result) : result;
       returnData = [{
-        json: result,
+        json: parsedResult,
       }];
 
       return [returnData];
