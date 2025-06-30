@@ -496,6 +496,26 @@ export class EKyteAction implements INodeType {
   async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
     const operation = this.getNodeParameter('operation', 0) as string;
 
+    const RATE_LIMIT_MINUTES = 15;
+    const staticData = this.getWorkflowStaticData('node');
+    const rateLimitKey = `lastCall_${operation}`;
+    const lastCallTime = staticData[rateLimitKey] as number;
+    
+    if (lastCallTime) {
+      const now = Date.now();
+      const timeDiffMs = now - lastCallTime;
+      const timeDiffMinutes = Math.floor(timeDiffMs / (1000 * 60));
+      
+      if (timeDiffMinutes < RATE_LIMIT_MINUTES) {
+        const remainingMinutes = RATE_LIMIT_MINUTES - timeDiffMinutes;
+        const remainingSeconds = (remainingMinutes * 60) - Math.floor((timeDiffMs % (1000 * 60)) / 1000);
+        throw new NodeOperationError(
+          this.getNode(), 
+          `Intervalo mínimo de ${RATE_LIMIT_MINUTES} minutos não respeitado para a operação "${operation}". Tente novamente em ${remainingSeconds} segundos.`
+        );
+      }
+    }
+
     const credentials = await this.getCredentials('eKyteApi');
     const apiKey = credentials.apiKey as string;
     const companyId = credentials.companyId as string;
@@ -626,6 +646,7 @@ export class EKyteAction implements INodeType {
           returnData = notifications.map((notification: any) => ({
             json: notification,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getBoards':
@@ -639,6 +660,7 @@ export class EKyteAction implements INodeType {
           returnData = boards.map((board: any) => ({
             json: board,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getWorkspaces':
@@ -652,6 +674,7 @@ export class EKyteAction implements INodeType {
           returnData = workspaces.map((workspace: {id: number, name: string}) => ({
             json: workspace,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getProjects':
@@ -665,6 +688,7 @@ export class EKyteAction implements INodeType {
           returnData = projects.map((project: any) => ({
             json: project,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTasks':
@@ -678,6 +702,7 @@ export class EKyteAction implements INodeType {
           returnData = tasks.map((task: any) => ({
             json: task,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTasksPhase':
@@ -691,6 +716,7 @@ export class EKyteAction implements INodeType {
           returnData = tasksPhase.map((task: any) => ({
             json: task,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTicketsChanged':
@@ -704,6 +730,7 @@ export class EKyteAction implements INodeType {
           returnData = ticketsChanged.map((ticket: any) => ({
             json: ticket,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTicketsClosed':
@@ -717,6 +744,7 @@ export class EKyteAction implements INodeType {
           returnData = ticketsClosed.map((ticket: any) => ({
             json: ticket,
           }));
+          staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         default:
@@ -741,6 +769,8 @@ export class EKyteAction implements INodeType {
       returnData = [{
         json: parsedResult,
       }];
+
+      staticData[rateLimitKey] = Date.now();
 
       return [returnData];
     } catch (error) {
