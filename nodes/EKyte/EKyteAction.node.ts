@@ -27,7 +27,7 @@ export class EKyteAction implements INodeType {
       },
     ],
     requestDefaults: {
-      baseURL: 'https://apistaging.ekyte.com/zapier',
+      baseURL: 'https://api.ekyte.com/n8n',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -500,17 +500,17 @@ export class EKyteAction implements INodeType {
     const staticData = this.getWorkflowStaticData('node');
     const rateLimitKey = `lastCall_${operation}`;
     const lastCallTime = staticData[rateLimitKey] as number;
-    
+
     if (lastCallTime) {
       const now = Date.now();
       const timeDiffMs = now - lastCallTime;
       const timeDiffMinutes = Math.floor(timeDiffMs / (1000 * 60));
-      
+
       if (timeDiffMinutes < RATE_LIMIT_MINUTES) {
         const remainingMinutes = RATE_LIMIT_MINUTES - timeDiffMinutes;
         const remainingSeconds = (remainingMinutes * 60) - Math.floor((timeDiffMs % (1000 * 60)) / 1000);
         throw new NodeOperationError(
-          this.getNode(), 
+          this.getNode(),
           `Intervalo mínimo de ${RATE_LIMIT_MINUTES} minutos não respeitado para a operação "${operation}". Tente novamente em ${remainingSeconds} segundos.`
         );
       }
@@ -520,7 +520,7 @@ export class EKyteAction implements INodeType {
     const apiKey = credentials.apiKey as string;
     const companyId = credentials.companyId as string;
 
-    const baseUrl = 'https://apistaging.ekyte.com/zapier';
+    const baseUrl = 'https://api.ekyte.com/n8n';
 
 
     let credentialParams: any = {
