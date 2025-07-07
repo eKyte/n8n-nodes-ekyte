@@ -32,7 +32,6 @@ You'll need to configure the eKyte API credentials:
 2. **Company ID**: Your eKyte company identifier
 
 To obtain these credentials:
-
 1. Log into your eKyte account
 2. Navigate to your API settings
 3. Generate an API key if you don't have one
@@ -41,7 +40,6 @@ To obtain these credentials:
 ## Operations
 
 ### Create Operations
-
 - **Create Board**: Create a new eKyte board
 - **Create Note**: Create a new note
 - **Create Project**: Create a new project
@@ -50,7 +48,6 @@ To obtain these credentials:
 - **Create Workspace**: Create a new workspace
 
 ### Get Operations
-
 - **Get Boards**: Retrieve all boards
 - **Get Notifications**: Retrieve notifications for a user
 - **Get Projects**: Retrieve all projects
@@ -68,8 +65,6 @@ To obtain these credentials:
 4. Provide the required user email
 5. Configure operation-specific parameters
 6. Execute the workflow
-
-```
 
 ## API Reference
 
@@ -89,13 +84,16 @@ This node integrates with the eKyte API at `https://api.ekyte.com/n8n`. For deta
 
 For issues, questions, or feature requests:
 - Create an issue in the [GitHub repository](https://github.com/ekyte/n8n-nodes-ekyte)
-- Contact the eKyte support team at dev@ekyte.com
+- Contact the eKyte support team at atendimento@ekyte.com
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
 ## Rate Limiting
 
 This node implements rate limiting to ensure compliance with eKyte API limits. All operations are automatically throttled to prevent exceeding API quotas.
-```
