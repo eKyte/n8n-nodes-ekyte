@@ -1,48 +1,101 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
+# n8n-nodes-ekyte
 
-# n8n-nodes-starter
+This is an n8n community node that lets you integrate with the eKyte API to manage tasks, projects, tickets, boards, workspaces, notes, and notifications.
 
-This repo contains example nodes to help you get started building your own custom integrations for [n8n](https://n8n.io). It includes the node linter and other dependencies.
+eKyte is a Digital Marketing Management Platform for High Performance.
 
-To make your custom node available to the community, you must create it as an npm package, and [submit it to the npm registry](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
+## Installation
 
-If you would like your node to be available on n8n cloud you can also [submit your node for verification](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/).
+### Community Nodes (Recommended)
 
-## Prerequisites
+1. Go to **Settings > Community Nodes**
+2. Select **Install**
+3. Enter `n8n-nodes-ekyte` in **Enter npm package name**
+4. Agree to the risks of using community nodes
+5. Select **Install**
 
-You need the following installed on your development machine:
+After installation, the eKyte node will be available in your n8n workflows.
 
-* [git](https://git-scm.com/downloads)
-* Node.js and npm. Minimum version Node 20. You can find instructions on how to install both using nvm (Node Version Manager) for Linux, Mac, and WSL [here](https://github.com/nvm-sh/nvm). For Windows users, refer to Microsoft's guide to [Install NodeJS on Windows](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows).
-* Install n8n with:
-  ```
-  npm install n8n -g
-  ```
-* Recommended: follow n8n's guide to [set up your development environment](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/).
+### Manual Installation
 
-## Using this starter
+To install this node locally:
 
-These are the basic steps for working with the starter. For detailed guidance on creating and publishing nodes, refer to the [documentation](https://docs.n8n.io/integrations/creating-nodes/).
+```bash
+npm install n8n-nodes-ekyte
+```
 
-1. [Generate a new repository](https://github.com/n8n-io/n8n-nodes-starter/generate) from this template repository.
-2. Clone your new repo:
-   ```
-   git clone https://github.com/<your organization>/<your-repo-name>.git
-   ```
-3. Run `npm i` to install dependencies.
-4. Open the project in your editor.
-5. Browse the examples in `/nodes` and `/credentials`. Modify the examples, or replace them with your own nodes.
-6. Update the `package.json` to match your details.
-7. Run `npm run lint` to check for errors or `npm run lintfix` to automatically fix errors when possible.
-8. Test your node locally. Refer to [Run your node locally](https://docs.n8n.io/integrations/creating-nodes/test/run-node-locally/) for guidance.
-9. Replace this README with documentation for your node. Use the [README_TEMPLATE](README_TEMPLATE.md) to get started.
-10. Update the LICENSE file to use your details.
-11. [Publish](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) your package to npm.
+## Credentials
 
-## More information
+You'll need to configure the eKyte API credentials:
 
-Refer to our [documentation on creating nodes](https://docs.n8n.io/integrations/creating-nodes/) for detailed information on building your own nodes.
+1. **API Key**: Your eKyte API key
+2. **Company ID**: Your eKyte company identifier
+
+To obtain these credentials:
+
+1. Log into your eKyte account
+2. Navigate to your API settings
+3. Generate an API key if you don't have one
+4. Note your Company ID
+
+## Operations
+
+### Create Operations
+
+- **Create Board**: Create a new eKyte board
+- **Create Note**: Create a new note
+- **Create Project**: Create a new project
+- **Create Task**: Create a new task
+- **Create Ticket**: Create a new support ticket
+- **Create Workspace**: Create a new workspace
+
+### Get Operations
+
+- **Get Boards**: Retrieve all boards
+- **Get Notifications**: Retrieve notifications for a user
+- **Get Projects**: Retrieve all projects
+- **Get Tasks**: Retrieve all tasks
+- **Get Tasks Phase**: Retrieve tasks with phase information
+- **Get Tickets Changed**: Retrieve tickets updated in the last 15 minutes
+- **Get Tickets Closed**: Retrieve tickets closed in the last 15 minutes
+- **Get Workspaces**: Retrieve all workspaces
+
+## Node Usage
+
+1. Add the eKyte node to your workflow
+2. Configure your eKyte API credentials
+3. Select the desired operation
+4. Provide the required user email
+5. Configure operation-specific parameters
+6. Execute the workflow
+
+```
+
+## API Reference
+
+This node integrates with the eKyte API at `https://api.ekyte.com/n8n`. For detailed API documentation, visit the [eKyte integration guide](https://www.ekyte.com/guide/pt-br/suporte/integracao-com-n8n/).
+
+## Version History
+
+- **0.1.0**: Initial release with core eKyte operations
+
+## Requirements
+
+- n8n version 1.0.0 or higher
+- Node.js 20.15 or higher
+- Valid eKyte account with API access
+
+## Support
+
+For issues, questions, or feature requests:
+- Create an issue in the [GitHub repository](https://github.com/ekyte/n8n-nodes-ekyte)
+- Contact the eKyte support team at dev@ekyte.com
 
 ## License
 
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Rate Limiting
+
+This node implements rate limiting to ensure compliance with eKyte API limits. All operations are automatically throttled to prevent exceeding API quotas.
+```
