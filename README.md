@@ -21,7 +21,7 @@ After installation, the eKyte node will be available in your n8n workflows.
 To install this node locally:
 
 ```bash
-npm install n8n-nodes-ekyte
+npm install @ekyte/n8n-nodes-ekyte
 ```
 
 ## Credentials
@@ -32,6 +32,7 @@ You'll need to configure the eKyte API credentials:
 2. **Company ID**: Your eKyte company identifier
 
 To obtain these credentials:
+
 1. Log into your eKyte account
 2. Navigate to your API settings
 3. Generate an API key if you don't have one
@@ -40,6 +41,7 @@ To obtain these credentials:
 ## Operations
 
 ### Create Operations
+
 - **Create Board**: Create a new eKyte board
 - **Create Note**: Create a new note
 - **Create Project**: Create a new project
@@ -48,6 +50,7 @@ To obtain these credentials:
 - **Create Workspace**: Create a new workspace
 
 ### Get Operations
+
 - **Get Boards**: Retrieve all boards
 - **Get Notifications**: Retrieve notifications for a user
 - **Get Projects**: Retrieve all projects
@@ -72,7 +75,7 @@ This node integrates with the eKyte API at `https://api.ekyte.com/n8n`. For deta
 
 ## Version History
 
-- **0.1.0**: Initial release with core eKyte operations
+- **1.0.0**: Initial release with core eKyte operations
 
 ## Requirements
 
@@ -83,6 +86,7 @@ This node integrates with the eKyte API at `https://api.ekyte.com/n8n`. For deta
 ## Support
 
 For issues, questions, or feature requests:
+
 - Create an issue in the [GitHub repository](https://github.com/ekyte/n8n-nodes-ekyte)
 - Contact the eKyte support team at atendimento@ekyte.com
 

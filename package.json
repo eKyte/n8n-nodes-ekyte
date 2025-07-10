@@ -1,9 +1,11 @@
 {
-  "name": "n8n-nodes-ekyte",
-  "version": "0.1.0",
+  "name": "@ekyte/n8n-nodes-ekyte",
+  "version": "1.0.0",
   "description": "Custom n8n nodes for eKyte API integration",
   "keywords": [
     "n8n-community-node-package",
+    "n8n-nodes",
+    "n8n",
     "n8n-nodes-ekyte",
     "ekyte"
   ],
@@ -55,7 +57,7 @@
     "rimraf": "^5.0.5",
     "typescript": "^5.8.2"
   },
-  "dependencies": {
+  "peerDependencies": {
     "n8n-core": "^1.98.0",
     "n8n-workflow": "^1.96.0"
   }

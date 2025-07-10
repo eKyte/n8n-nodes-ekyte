@@ -128,7 +128,7 @@ export class EKyteAction implements INodeType {
         default: 'createTask',
       },
       {
-        displayName: 'E-mail',
+        displayName: 'E-Mail',
         name: 'userEmail',
         type: 'string',
         required: true,
@@ -155,7 +155,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Id Tipo Tarefa',
+        displayName: 'ID Tipo Tarefa',
         name: 'ctcTaskTypeId',
         type: 'number',
         required: true,
@@ -167,7 +167,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Id Workspace',
+        displayName: 'ID Workspace',
         name: 'workspaceId',
         type: 'number',
         required: true,
@@ -192,7 +192,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Quantidade de peças',
+        displayName: 'Quantidade De Peças',
         name: 'quantity',
         type: 'number',
         default: null,
@@ -203,7 +203,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Id Projeto',
+        displayName: 'ID Projeto',
         name: 'ctcTaskProjectId',
         type: 'number',
         default: null,
@@ -225,7 +225,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Iniciar em',
+        displayName: 'Iniciar Em',
         name: 'phaseStartDate',
         type: 'dateTime',
         required: true,
@@ -238,7 +238,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Concluir até',
+        displayName: 'Concluir Até',
         name: 'currentDueDate',
         type: 'dateTime',
         required: true,
@@ -264,7 +264,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Tarefa planejada',
+        displayName: 'Tarefa Planejada',
         name: 'planTask',
         type: 'boolean',
         default: true,
@@ -336,7 +336,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Tipo de ocorrência',
+        displayName: 'Tipo De Ocorrência',
         name: 'ticketType',
         type: 'number',
         required: true,
@@ -348,7 +348,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Privisto para',
+        displayName: 'Privisto Para',
         name: 'expectDueDate',
         type: 'dateTime',
         default: '',
@@ -359,7 +359,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'E-mail do solicitante',
+        displayName: 'E-Mail Do Solicitante',
         name: 'requesterEmail',
         type: 'string',
         required: true,
@@ -371,7 +371,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Em cópia',
+        displayName: 'Em Cópia',
         name: 'usersCC',
         type: 'string',
         default: '',
@@ -382,7 +382,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'E-mail do responsável',
+        displayName: 'E-Mail Do Responsável',
         name: 'analystEmail',
         type: 'string',
         default: '',
@@ -418,7 +418,7 @@ export class EKyteAction implements INodeType {
       },
       // Note fields
       {
-        displayName: 'Id Board',
+        displayName: 'ID Board',
         name: 'planId',
         type: 'number',
         required: true,
@@ -480,7 +480,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Id Squad',
+        displayName: 'ID Squad',
         name: 'squadId',
         type: 'number',
         default: null,
