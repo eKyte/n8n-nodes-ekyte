@@ -1,6 +1,7 @@
 import {
     ICredentialType,
     INodeProperties,
+    ICredentialTestRequest,
 } from 'n8n-workflow';
 
 export class EKyteApi implements ICredentialType {
@@ -28,4 +29,16 @@ export class EKyteApi implements ICredentialType {
             description: 'The Company ID for eKyte authentication',
         },
     ];
+
+    test: ICredentialTestRequest = {
+        request: {
+            baseURL: 'https://api.ekyte.com/n8n',
+            url: '/polling/auth',
+            method: 'GET',
+            qs: {
+                apiKey: '={{$credentials.apiKey}}',
+                CompanyId: '={{$credentials.companyId}}',
+            },
+        },
+    };
 }
