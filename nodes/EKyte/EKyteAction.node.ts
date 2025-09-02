@@ -13,7 +13,7 @@ export class EKyteAction implements INodeType {
     icon: 'file:ekyte.svg',
     group: ['transform'],
     version: 1,
-    subtitle: '={{$parameter["operation"]}}',
+    subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
     description: 'Create and retrieve data from eKyte (tasks, projects, tickets, boards, workspaces, notes, notifications)',
     defaults: {
       name: 'eKyte',
@@ -26,109 +26,235 @@ export class EKyteAction implements INodeType {
         required: true,
       },
     ],
-    requestDefaults: {
-      baseURL: 'https://api.ekyte.com/n8n',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    },
     properties: [
+      {
+        displayName: 'Resource',
+        name: 'resource',
+        type: 'options',
+        noDataExpression: true,
+        options: [
+          {
+            name: 'Board',
+            value: 'board',
+          },
+          {
+            name: 'Note',
+            value: 'note',
+          },
+          {
+            name: 'Notification',
+            value: 'notifications',
+          },
+          {
+            name: 'Project',
+            value: 'project',
+          },
+          {
+            name: 'Task',
+            value: 'task',
+          },
+          {
+            name: 'Ticket',
+            value: 'ticket',
+          },
+          {
+            name: 'Workspace',
+            value: 'workspaces',
+          },
+        ],
+        default: 'task',
+      },
       {
         displayName: 'Operation',
         name: 'operation',
         type: 'options',
         noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['board'],
+          },
+        },
         options: [
           {
-            name: 'Create Board',
+            name: 'Create',
             value: 'createBoard',
             description: 'Create a new eKyte Board',
             action: 'Create board',
           },
           {
-            name: 'Create Note',
+            name: 'Get All',
+            value: 'getBoards',
+            description: 'Get all boards from eKyte',
+            action: 'Get all boards',
+          },
+        ],
+        default: 'createBoard',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['note'],
+          },
+        },
+        options: [
+          {
+            name: 'Create',
             value: 'createNote',
             description: 'Create a new eKyte Note',
             action: 'Create note',
           },
+        ],
+        default: 'createNote',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['project'],
+          },
+        },
+        options: [
           {
-            name: 'Create Project',
+            name: 'Create',
             value: 'createProject',
             description: 'Create a new eKyte Project',
             action: 'Create project',
           },
           {
-            name: 'Create Task',
+            name: 'Get All',
+            value: 'getProjects',
+            description: 'Get all created projects from eKyte',
+            action: 'Get all projects',
+          },
+        ],
+        default: 'createProject',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['task'],
+          },
+        },
+        options: [
+          {
+            name: 'Create',
             value: 'createTask',
             description: 'Create a new eKyte Task',
             action: 'Create task',
           },
           {
-            name: 'Create Ticket',
-            value: 'createTicket',
-            description: 'Create a new eKyte Ticket',
-            action: 'Create ticket',
-          },
-          {
-            name: 'Create Workspace',
-            value: 'createWorkspace',
-            description: 'Create a new eKyte Workspace',
-            action: 'Create workspace',
-          },
-          {
-            name: 'Get Boards',
-            value: 'getBoards',
-            description: 'Get boards from eKyte',
-            action: 'Get boards',
-          },
-          {
-            name: 'Get Notifications',
-            value: 'getNotifications',
-            description: 'Get notifications from eKyte',
-            action: 'Get notifications',
-          },
-          {
-            name: 'Get Projects',
-            value: 'getProjects',
-            description: 'Get created projects from eKyte',
-            action: 'Get projects',
-          },
-          {
-            name: 'Get Tasks',
+            name: 'Get All',
             value: 'getTasks',
-            description: 'Get tasks from eKyte',
-            action: 'Get tasks',
+            description: 'Get all tasks from eKyte',
+            action: 'Get all tasks',
           },
           {
-            name: 'Get Tasks Phase',
+            name: 'Get All with Phase',
             value: 'getTasksPhase',
-            description: 'Get tasks with phase information from eKyte',
-            action: 'Get tasks phase',
-          },
-          {
-            name: 'Get Tickets Changed',
-            value: 'getTicketsChanged',
-            description: 'Get tickets that have been updated in the last 15 minutes',
-            action: 'Get tickets changed',
-          },
-          {
-            name: 'Get Tickets Closed',
-            value: 'getTicketsClosed',
-            description: 'Get tickets that were closed in the last 15 minutes',
-            action: 'Get tickets closed',
-          },
-          {
-            name: 'Get Workspaces',
-            value: 'getWorkspaces',
-            description: 'Get workspaces from eKyte',
-            action: 'Get workspaces',
+            description: 'Get all tasks with phase information from eKyte',
+            action: 'Get all tasks with phase',
           },
         ],
         default: 'createTask',
       },
       {
-        displayName: 'E-Mail',
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['ticket'],
+          },
+        },
+        options: [
+          {
+            name: 'Create',
+            value: 'createTicket',
+            description: 'Create a new eKyte Ticket',
+            action: 'Create ticket',
+          },
+          {
+            name: 'Get Changed',
+            value: 'getTicketsChanged',
+            description: 'Get tickets that have been updated in the last 15 minutes',
+            action: 'Get changed tickets',
+          },
+          {
+            name: 'Get Closed',
+            value: 'getTicketsClosed',
+            description: 'Get tickets that were closed in the last 15 minutes',
+            action: 'Get closed tickets',
+          },
+        ],
+        default: 'createTicket',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['notifications'],
+          },
+        },
+        options: [
+          {
+            name: 'Get All',
+            value: 'getNotifications',
+            description: 'Get all notifications from eKyte',
+            action: 'Get all notifications',
+          },
+        ],
+        default: 'getNotifications',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['workspaces'],
+          },
+        },
+        options: [
+          {
+            name: 'Create',
+            value: 'createWorkspace',
+            description: 'Create a new eKyte Workspace',
+            action: 'Create workspace',
+          },
+          {
+            name: 'Get All',
+            value: 'getWorkspaces',
+            description: 'Get all workspaces from eKyte',
+            action: 'Get all workspaces',
+          },
+        ],
+        default: 'createWorkspace',
+      },
+      {
+        displayName: 'Base URL',
+        name: 'baseUrl',
+        type: 'hidden',
+        default: 'https://api.ekyte.com/n8n',
+        description: 'The base URL for eKyte API',
+      },
+      {
+        displayName: 'Email',
         name: 'userEmail',
         type: 'string',
         required: true,
@@ -142,7 +268,7 @@ export class EKyteAction implements INodeType {
       },
       // Task fields
       {
-        displayName: 'Titulo',
+        displayName: 'Title',
         name: 'title',
         type: 'string',
         required: true,
@@ -155,7 +281,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'ID Tipo Tarefa',
+        displayName: 'Task Type ID',
         name: 'ctcTaskTypeId',
         type: 'number',
         required: true,
@@ -167,7 +293,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'ID Workspace',
+        displayName: 'Workspace ID',
         name: 'workspaceId',
         type: 'number',
         required: true,
@@ -179,7 +305,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Prioridade',
+        displayName: 'Priority',
         name: 'priorityGroup',
         type: 'number',
         required: true,
@@ -192,7 +318,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Quantidade De Peças',
+        displayName: 'Quantity',
         name: 'quantity',
         type: 'number',
         default: null,
@@ -203,7 +329,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'ID Projeto',
+        displayName: 'Project ID',
         name: 'ctcTaskProjectId',
         type: 'number',
         default: null,
@@ -214,7 +340,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Descrição',
+        displayName: 'Description',
         name: 'description',
         type: 'string',
         default: '',
@@ -225,7 +351,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Iniciar Em',
+        displayName: 'Start Date',
         name: 'phaseStartDate',
         type: 'dateTime',
         required: true,
@@ -238,7 +364,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Concluir Até',
+        displayName: 'Due Date',
         name: 'currentDueDate',
         type: 'dateTime',
         required: true,
@@ -251,7 +377,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Esforço',
+        displayName: 'Effort (Minutes)',
         name: 'estimatedTime',
         type: 'number',
         required: true,
@@ -264,7 +390,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Tarefa Planejada',
+        displayName: 'Planned Task',
         name: 'planTask',
         type: 'boolean',
         default: true,
@@ -277,7 +403,7 @@ export class EKyteAction implements INodeType {
       },
       // Project fields
       {
-        displayName: 'Titulo',
+        displayName: 'Title',
         name: 'projectName',
         type: 'string',
         required: true,
@@ -289,7 +415,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Identificação',
+        displayName: 'Alias',
         name: 'alias',
         type: 'string',
         default: '',
@@ -311,7 +437,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Data Início',
+        displayName: 'Start Date',
         name: 'startDate',
         type: 'dateTime',
         default: '',
@@ -324,7 +450,7 @@ export class EKyteAction implements INodeType {
       },
       // Ticket fields
       {
-        displayName: 'Assunto',
+        displayName: 'Subject',
         name: 'subject',
         type: 'string',
         required: true,
@@ -336,7 +462,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Tipo De Ocorrência',
+        displayName: 'Ticket Type',
         name: 'ticketType',
         type: 'number',
         required: true,
@@ -348,7 +474,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Privisto Para',
+        displayName: 'Expected Due Date',
         name: 'expectDueDate',
         type: 'dateTime',
         default: '',
@@ -359,7 +485,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'E-Mail Do Solicitante',
+        displayName: 'Requester Email',
         name: 'requesterEmail',
         type: 'string',
         required: true,
@@ -371,7 +497,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Em Cópia',
+        displayName: 'CC Users',
         name: 'usersCC',
         type: 'string',
         default: '',
@@ -382,7 +508,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'E-Mail Do Responsável',
+        displayName: 'Analyst Email',
         name: 'analystEmail',
         type: 'string',
         default: '',
@@ -393,7 +519,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Descrição',
+        displayName: 'Description',
         name: 'message',
         type: 'string',
         default: '',
@@ -405,7 +531,7 @@ export class EKyteAction implements INodeType {
       },
       // Board fields
       {
-        displayName: 'Titulo',
+        displayName: 'Title',
         name: 'boardTitle',
         type: 'string',
         required: true,
@@ -418,7 +544,7 @@ export class EKyteAction implements INodeType {
       },
       // Note fields
       {
-        displayName: 'ID Board',
+        displayName: 'Board ID',
         name: 'planId',
         type: 'number',
         required: true,
@@ -431,7 +557,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Titulo',
+        displayName: 'Title',
         name: 'noteTitle',
         type: 'string',
         required: true,
@@ -443,7 +569,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Conteúdo',
+        displayName: 'Content',
         name: 'content',
         type: 'string',
         default: '',
@@ -454,7 +580,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'Categoria',
+        displayName: 'Category',
         name: 'category',
         type: 'string',
         required: true,
@@ -468,7 +594,7 @@ export class EKyteAction implements INodeType {
       },
       // Workspace fields
       {
-        displayName: 'Nome',
+        displayName: 'Name',
         name: 'workspaceName',
         type: 'string',
         required: true,
@@ -480,7 +606,7 @@ export class EKyteAction implements INodeType {
         },
       },
       {
-        displayName: 'ID Squad',
+        displayName: 'Squad ID',
         name: 'squadId',
         type: 'number',
         default: null,
@@ -511,25 +637,13 @@ export class EKyteAction implements INodeType {
         const remainingSeconds = (remainingMinutes * 60) - Math.floor((timeDiffMs % (1000 * 60)) / 1000);
         throw new NodeOperationError(
           this.getNode(),
-          `Intervalo mínimo de ${RATE_LIMIT_MINUTES} minutos não respeitado para a operação "${operation}". Tente novamente em ${remainingSeconds} segundos.`
+          `Minimum interval of ${RATE_LIMIT_MINUTES} minutes not respected for operation "${operation}". Try again in ${remainingSeconds} seconds.`
         );
       }
     }
 
-    const credentials = await this.getCredentials('eKyteApi');
-    const apiKey = credentials.apiKey as string;
-    const companyId = credentials.companyId as string;
-
-    const baseUrl = 'https://api.ekyte.com/n8n';
-
-
-    let credentialParams: any = {
-      apiKey: apiKey,
-      CompanyId: companyId,
-    };
-
+    const baseUrl = this.getNodeParameter('baseUrl', 0) as string;
     let userEmail = '';
-
 
     try {
       let returnData: INodeExecutionData[] = [];
@@ -564,7 +678,6 @@ export class EKyteAction implements INodeType {
 
         case 'createProject':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
-					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/projects`;
           const projectWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
           requestBody = {
@@ -609,7 +722,6 @@ export class EKyteAction implements INodeType {
 
         case 'createWorkspace':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
-					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/workspaces`;
           const squadId = this.getNodeParameter('squadId', 0) as number;
           requestBody = {
@@ -621,7 +733,6 @@ export class EKyteAction implements INodeType {
 
         case 'createNote':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
-					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/notes`;
           const planId = this.getNodeParameter('planId', 0) as number;
           requestBody = {
@@ -635,114 +746,114 @@ export class EKyteAction implements INodeType {
 
         case 'getNotifications':
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
-					credentialParams.UserEmail = userEmail;
           endpoint = `${baseUrl}/polling/notifications`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams
+            qs: { UserEmail: userEmail },
           });
           const notifications = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = notifications.map((notification: any) => ({
+          returnData = notifications.map((notification: any, i: number) => ({
             json: notification,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getBoards':
           endpoint = `${baseUrl}/polling/boards`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams
           });
           const boards = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = boards.map((board: any) => ({
+          returnData = boards.map((board: any, i: number) => ({
             json: board,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getWorkspaces':
           endpoint = `${baseUrl}/polling/workspaces`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams
           });
           const workspaces = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = workspaces.map((workspace: {id: number, name: string}) => ({
+          returnData = workspaces.map((workspace: {id: number, name: string}, i: number) => ({
             json: workspace,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getProjects':
           endpoint = `${baseUrl}/polling/projects/created`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
           });
           const projects = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = projects.map((project: any) => ({
+          returnData = projects.map((project: any, i: number) => ({
             json: project,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTasks':
           endpoint = `${baseUrl}/polling/tasks`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
           });
           const tasks = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = tasks.map((task: any) => ({
+          returnData = tasks.map((task: any, i: number) => ({
             json: task,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTasksPhase':
           endpoint = `${baseUrl}/polling/v2/tasks`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
           });
           const tasksPhase = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = tasksPhase.map((task: any) => ({
+          returnData = tasksPhase.map((task: any, i: number) => ({
             json: task,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTicketsChanged':
           endpoint = `${baseUrl}/polling/tickets/concluded`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
           });
           const ticketsChanged = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = ticketsChanged.map((ticket: any) => ({
+          returnData = ticketsChanged.map((ticket: any, i: number) => ({
             json: ticket,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
 
         case 'getTicketsClosed':
           endpoint = `${baseUrl}/polling/tickets/changes`;
-          result = await this.helpers.request({
+          result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
-            qs: credentialParams,
           });
           const ticketsClosed = typeof result === 'string' ? JSON.parse(result) : result;
-          returnData = ticketsClosed.map((ticket: any) => ({
+          returnData = ticketsClosed.map((ticket: any, i: number) => ({
             json: ticket,
+            pairedItem: { item: i },
           }));
           staticData[rateLimitKey] = Date.now();
           return [returnData];
@@ -751,12 +862,10 @@ export class EKyteAction implements INodeType {
           throw new NodeOperationError(this.getNode(), `Operation ${operation} not supported`);
       }
 
-      result = await this.helpers.request({
+      result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
         method: 'POST',
         url: endpoint,
         qs: {
-          apiKey: apiKey,
-          CompanyId: companyId,
           UserEmail: userEmail,
         },
         body: requestBody,
@@ -768,6 +877,7 @@ export class EKyteAction implements INodeType {
       const parsedResult = typeof result === 'string' ? JSON.parse(result) : result;
       returnData = [{
         json: parsedResult,
+        pairedItem: { item: 0 },
       }];
 
       staticData[rateLimitKey] = Date.now();
