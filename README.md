@@ -38,36 +38,47 @@ To obtain these credentials:
 3. Generate an API key if you don't have one
 4. Note your Company ID
 
-## Operations
+## Resources and Operations
 
-### Create Operations
+The eKyte node is organized by resources, each with specific operations:
 
-- **Create Board**: Create a new eKyte board
-- **Create Note**: Create a new note
-- **Create Project**: Create a new project
-- **Create Task**: Create a new task
-- **Create Ticket**: Create a new support ticket
-- **Create Workspace**: Create a new workspace
+### Board
+- **Create**: Create a new eKyte board
+- **Get All**: Retrieve all boards
 
-### Get Operations
+### Note
+- **Create**: Create a new note
 
-- **Get Boards**: Retrieve all boards
-- **Get Notifications**: Retrieve notifications for a user
-- **Get Projects**: Retrieve all projects
-- **Get Tasks**: Retrieve all tasks
-- **Get Tasks Phase**: Retrieve tasks with phase information
-- **Get Tickets Changed**: Retrieve tickets updated in the last 15 minutes
-- **Get Tickets Closed**: Retrieve tickets closed in the last 15 minutes
-- **Get Workspaces**: Retrieve all workspaces
+### Project
+- **Create**: Create a new project
+- **Get All**: Retrieve all projects
+
+### Task
+- **Create**: Create a new task
+- **Get All**: Retrieve all tasks
+- **Get All with Phase**: Retrieve tasks with phase information
+
+### Ticket
+- **Create**: Create a new support ticket
+- **Get Changed**: Retrieve tickets updated in the last 15 minutes
+- **Get Closed**: Retrieve tickets closed in the last 15 minutes
+
+### Notification
+- **Get All**: Retrieve notifications for a user
+
+### Workspace
+- **Create**: Create a new workspace
+- **Get All**: Retrieve all workspaces
 
 ## Node Usage
 
 1. Add the eKyte node to your workflow
 2. Configure your eKyte API credentials
-3. Select the desired operation
-4. Provide the required user email
-5. Configure operation-specific parameters
-6. Execute the workflow
+3. Select the desired resource (Board, Note, Project, Task, Ticket, Notification, or Workspace)
+4. Choose the operation for the selected resource
+5. Provide the required user email (when applicable)
+6. Configure operation-specific parameters
+7. Execute the workflow
 
 ## API Reference
 
