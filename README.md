@@ -111,4 +111,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Rate Limiting
 
-This node implements rate limiting to ensure compliance with eKyte API limits. All operations are automatically throttled to prevent exceeding API quotas.
+This node implements rate limiting to prevent excessive calls and backend overload:
+
+- **Get Operations**: Have a 5-minute rate limit for the same operation to avoid excessive calls
+- **Create Operations**: No rate limiting applied, allowing unrestricted resource creation
