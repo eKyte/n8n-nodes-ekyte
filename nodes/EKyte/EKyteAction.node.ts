@@ -761,8 +761,25 @@ export class EKyteAction implements INodeType {
             method: 'GET',
             url: endpoint,
             qs: { UserEmail: userEmail },
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const notifications = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const notifications = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = notifications.map((notification: any, i: number) => ({
             json: notification,
             pairedItem: { item: i },
@@ -775,8 +792,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const boards = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const boards = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = boards.map((board: any, i: number) => ({
             json: board,
             pairedItem: { item: i },
@@ -789,8 +823,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const workspaces = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const workspaces = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = workspaces.map((workspace: {id: number, name: string}, i: number) => ({
             json: workspace,
             pairedItem: { item: i },
@@ -803,8 +854,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const projects = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const projects = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = projects.map((project: any, i: number) => ({
             json: project,
             pairedItem: { item: i },
@@ -817,8 +885,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const tasks = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const tasks = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = tasks.map((task: any, i: number) => ({
             json: task,
             pairedItem: { item: i },
@@ -831,8 +916,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const tasksPhase = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const tasksPhase = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = tasksPhase.map((task: any, i: number) => ({
             json: task,
             pairedItem: { item: i },
@@ -845,8 +947,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const ticketsChanged = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const ticketsChanged = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = ticketsChanged.map((ticket: any, i: number) => ({
             json: ticket,
             pairedItem: { item: i },
@@ -859,8 +978,25 @@ export class EKyteAction implements INodeType {
           result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
             method: 'GET',
             url: endpoint,
+            returnFullResponse: true,
+            ignoreHttpStatusErrors: true,
           });
-          const ticketsClosed = typeof result === 'string' ? JSON.parse(result) : result;
+          // Check for errors
+          if (result.statusCode && result.statusCode >= 400) {
+            let errorMessage = `Error executing operation ${operation}`;
+            try {
+              const errorBody = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+              if (errorBody && errorBody.text) {
+                errorMessage = errorBody.id ? `[Error ${errorBody.id}] ${errorBody.text}` : errorBody.text;
+              } else if (errorBody && errorBody.message) {
+                errorMessage = errorBody.message;
+              }
+            } catch (parseError) {
+              errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+            }
+            throw new NodeOperationError(this.getNode(), errorMessage);
+          }
+          const ticketsClosed = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
           returnData = ticketsClosed.map((ticket: any, i: number) => ({
             json: ticket,
             pairedItem: { item: i },
@@ -882,17 +1018,50 @@ export class EKyteAction implements INodeType {
         headers: {
           'Content-Type': 'application/json',
         },
+        returnFullResponse: true,
+        ignoreHttpStatusErrors: true,
       });
 
-      const parsedResult = typeof result === 'string' ? JSON.parse(result) : result;
+      // Check if the request was successful
+      if (result.statusCode && result.statusCode >= 400) {
+        let errorMessage = `Error executing operation ${operation}`;
+
+        try {
+          const errorBody = typeof result.body === 'string'
+            ? JSON.parse(result.body)
+            : result.body;
+
+          if (errorBody && errorBody.text) {
+            errorMessage = errorBody.text;
+            if (errorBody.id) {
+              errorMessage = `[Error ${errorBody.id}] ${errorBody.text}`;
+            }
+          } else if (errorBody && errorBody.message) {
+            errorMessage = errorBody.message;
+          }
+        } catch (parseError) {
+          // If parsing fails, use status message
+          errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+        }
+
+        throw new NodeOperationError(this.getNode(), errorMessage);
+      }
+
+      // Process successful response
+      const parsedResult = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
       returnData = [{
         json: parsedResult,
         pairedItem: { item: 0 },
       }];
 
       return [returnData];
-    } catch (error) {
-      throw new NodeOperationError(this.getNode(), `Error executing operation ${operation}: ${(error as Error).message}`);
+    } catch (error: any) {
+      // Re-throw if it's already a NodeOperationError
+      if (error instanceof NodeOperationError) {
+        throw error;
+      }
+      // For any other errors (network, etc.)
+      throw new NodeOperationError(this.getNode(), `Error executing operation ${operation}: ${error.message || 'Unknown error'}`);
     }
   }
 }
