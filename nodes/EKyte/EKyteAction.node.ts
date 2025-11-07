@@ -14,7 +14,8 @@ export class EKyteAction implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
-		description: 'Create and retrieve data from eKyte (tasks, projects, tickets, boards, workspaces, notes, notifications)',
+		description:
+			'Create and retrieve data from eKyte (tasks, projects, tickets, boards, workspaces, notes, notifications)',
 		defaults: {
 			name: 'eKyte',
 		},
@@ -483,7 +484,7 @@ export class EKyteAction implements INodeType {
 				required: true,
 				default: '',
 				description:
-					'Ticket Type (1-5, where 1=Solicitação, 2=Dúvida, 3=Correção, 4=Orçamento, 5=Melhoria)',
+					'Ticket Type (1-5, where 1=Request, 2=Question, 3=Bug Fix, 4=Quote, 5=Enhancement)',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -508,7 +509,7 @@ export class EKyteAction implements INodeType {
 				required: true,
 				default: '',
 				description:
-					'É a pessoa que gerou a demanda. Pode ser um usuário com qualquer perfil, inclusive convidado (não pertence a equipe).',
+					'The person who created the request. Can be a user with any profile, including guest (not part of the team).',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -520,7 +521,7 @@ export class EKyteAction implements INodeType {
 				name: 'usersCC',
 				type: 'string',
 				default: '',
-				description: 'E-mail do usuário em cópia, separados por vírgula',
+				description: 'CC user emails, separated by comma',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -533,7 +534,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				default: '',
 				description:
-					'É o responsável principal pelo atendimento. Se não for informado, um analista padrão é alocado automaticamente, conforme a rotina profissionais e equipes, coluna “Atendimento”.',
+					'The main responsible for handling the ticket. If not provided, a default analyst is automatically assigned according to the professionals and teams routine, "Service" column.',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
