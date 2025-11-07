@@ -1,20 +1,18 @@
 {
-    "node": "n8n-nodes-ekyte.EKyte",
-    "nodeVersion": "1.0",
-    "codexVersion": "1.0",
-    "categories": [
-        "Development"
-    ],
-    "resources": {
-        "credentialDocumentation": [
-            {
-                "url": "https://docs.n8n.io/credentials/ekyte"
-            }
-        ],
-        "primaryDocumentation": [
-            {
-                "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-ekyte/"
-            }
-        ]
-    }
+	"node": "n8n-nodes-ekyte.EKyte",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.n8n.io/credentials/ekyte"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-ekyte/"
+			}
+		]
+	}
 }
