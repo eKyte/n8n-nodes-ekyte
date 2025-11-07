@@ -1,0 +1,35 @@
+image: node:20.15
+
+definitions:
+  steps:
+    - step: &build-step
+        name: Build
+        caches:
+          - node
+        script:
+          - npm ci
+          - npm run build
+        artifacts:
+          - dist/**
+
+pipelines:
+  branches:
+    develop:
+      - step: *build-step
+      - step:
+          name: Deploy Beta
+          script:
+            - npm ci
+            - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+            - npm publish --tag beta
+          trigger: automatic
+
+    master:
+      - step: *build-step
+      - step:
+          name: Deploy Latest
+          script:
+            - npm ci
+            - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+            - npm publish --access public --tag latest
+          trigger: manual
