@@ -19,6 +19,7 @@ pipelines:
       - step:
           name: Deploy Beta
           script:
+            - npm ci
             - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
             - npm publish --tag beta
           trigger: automatic
@@ -28,6 +29,7 @@ pipelines:
       - step:
           name: Deploy Latest
           script:
+            - npm ci
             - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
             - npm publish --access public --tag latest
           trigger: manual
