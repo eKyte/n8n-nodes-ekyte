@@ -314,6 +314,17 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
+				displayName: 'Initial Executor',
+				name: 'initialExecutor',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createTask'],
+					},
+				},
+			},
+			{
 				displayName: 'Priority',
 				name: 'priorityGroup',
 				type: 'number',
@@ -672,6 +683,7 @@ export class EKyteAction implements INodeType {
 
 		const baseUrl = this.getNodeParameter('baseUrl', 0) as string;
 		let userEmail = '';
+		let initialExecutor = '';
 
 		// Helper function to register timestamp for read operations
 		const registerTimestamp = () => {
@@ -693,6 +705,7 @@ export class EKyteAction implements INodeType {
 					const taskWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
 					const quantity = this.getNodeParameter('quantity', 0) as number;
 					const ctcTaskProjectId = this.getNodeParameter('ctcTaskProjectId', 0) as number;
+					initialExecutor = this.getNodeParameter('initialExecutor', 0) as string;
 					requestBody = {
 						UserEmail: userEmail,
 						Title: this.getNodeParameter('title', 0) as string,
@@ -706,6 +719,7 @@ export class EKyteAction implements INodeType {
 						CurrentDueDate: this.getNodeParameter('currentDueDate', 0) as string,
 						EstimatedTime: this.getNodeParameter('estimatedTime', 0) as number,
 						PlanTask: this.getNodeParameter('planTask', 0) as boolean,
+						InitialExecutor: initialExecutor,
 					};
 					break;
 
