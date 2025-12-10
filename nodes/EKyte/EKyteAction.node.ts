@@ -13,6 +13,7 @@ export class EKyteAction implements INodeType {
 		icon: 'file:ekyte.svg',
 		group: ['transform'],
 		version: 1,
+		usableAsTool: true,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description:
 			'Create and retrieve data from eKyte (tasks, projects, tickets, boards, workspaces, notes, notifications)',
@@ -79,13 +80,13 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createBoard',
-						description: 'Create a new eKyte Board',
+						description: 'Create a new board for organizing notes and planning content',
 						action: 'Create board',
 					},
 					{
 						name: 'Get All',
 						value: 'getBoards',
-						description: 'Get all boards from eKyte',
+						description: 'Retrieve all boards accessible to the authenticated user',
 						action: 'Get all boards',
 					},
 				],
@@ -105,7 +106,7 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createNote',
-						description: 'Create a new eKyte Note',
+						description: 'Create a new note inside a board with title, content, and category',
 						action: 'Create note',
 					},
 				],
@@ -125,13 +126,13 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createProject',
-						description: 'Create a new eKyte Project',
+						description: 'Create a new project to group related tasks and track progress',
 						action: 'Create project',
 					},
 					{
 						name: 'Get All',
 						value: 'getProjects',
-						description: 'Get all created projects from eKyte',
+						description: 'Retrieve all projects accessible to the authenticated user',
 						action: 'Get all projects',
 					},
 				],
@@ -151,20 +152,32 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createTask',
-						description: 'Create a new eKyte Task',
+						description: 'Create a new task in eKyte with title, dates, priority, and assignment',
 						action: 'Create task',
 					},
 					{
-						name: 'Get All',
-						value: 'getTasks',
-						description: 'Get all tasks from eKyte',
-						action: 'Get all tasks',
+						name: 'Get',
+						value: 'getTask',
+						description: 'Retrieve a single task by its unique ID',
+						action: 'Get task',
 					},
 					{
-						name: 'Get All with Phase',
+						name: 'Get Many (with Filters)',
+						value: 'getManyTasks',
+						description: 'Search and filter tasks by title, status, workspace, executor, squad, project, or date range',
+						action: 'Get many tasks with filters',
+					},
+					{
+						name: 'Get Recent',
+						value: 'getTasks',
+						description: 'Get tasks created or updated in the last 15 minutes (basic info)',
+						action: 'Get recent tasks',
+					},
+					{
+						name: 'Get Recent (with Phase)',
 						value: 'getTasksPhase',
-						description: 'Get all tasks with phase information from eKyte',
-						action: 'Get all tasks with phase',
+						description: 'Get tasks created or updated in the last 15 minutes including current phase/stage information',
+						action: 'Get recent tasks with phase',
 					},
 				],
 				default: 'createTask',
@@ -183,20 +196,20 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createTicket',
-						description: 'Create a new eKyte Ticket',
+						description: 'Create a new ticket with subject, type, priority, and requester information',
 						action: 'Create ticket',
 					},
 					{
-						name: 'Get Changed',
-						value: 'getTicketsChanged',
-						description: 'Get tickets that have been updated in the last 15 minutes',
-						action: 'Get changed tickets',
+						name: 'Get Concluded',
+						value: 'getTicketsClosed',
+						description: 'Get tickets that were concluded/closed in the last 15 minutes',
+						action: 'Get concluded tickets',
 					},
 					{
-						name: 'Get Closed',
-						value: 'getTicketsClosed',
-						description: 'Get tickets that were closed in the last 15 minutes',
-						action: 'Get closed tickets',
+						name: 'Get Updated',
+						value: 'getTicketsChanged',
+						description: 'Get tickets that had any changes/updates in the last 15 minutes',
+						action: 'Get updated tickets',
 					},
 				],
 				default: 'createTicket',
@@ -215,7 +228,7 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Get All',
 						value: 'getNotifications',
-						description: 'Get all notifications from eKyte',
+						description: 'Retrieve all unread notifications for the specified user',
 						action: 'Get all notifications',
 					},
 				],
@@ -235,13 +248,13 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Create',
 						value: 'createWorkspace',
-						description: 'Create a new eKyte Workspace',
+						description: 'Create a new workspace for a team or department',
 						action: 'Create workspace',
 					},
 					{
 						name: 'Get All',
 						value: 'getWorkspaces',
-						description: 'Get all workspaces from eKyte',
+						description: 'Retrieve all workspaces accessible to the authenticated user',
 						action: 'Get all workspaces',
 					},
 				],
@@ -260,7 +273,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
-				description: 'The user email for eKyte operations',
+				description: 'The email address of the eKyte user performing this operation',
 				displayOptions: {
 					show: {
 						operation: [
@@ -277,12 +290,25 @@ export class EKyteAction implements INodeType {
 			},
 			// Task fields
 			{
+				displayName: 'Task ID',
+				name: 'taskId',
+				type: 'string',
+				required: true,
+				default: '',
+				description: 'The unique numeric identifier of the task to retrieve. You can find this ID in the task URL or by listing tasks first.',
+				displayOptions: {
+					show: {
+						operation: ['getTask'],
+					},
+				},
+			},
+			{
 				displayName: 'Title',
 				name: 'title',
 				type: 'string',
 				required: true,
 				default: '',
-				description: 'Task title',
+				description: 'The title or name of the task. This should be a clear, concise description of what needs to be done.',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -295,6 +321,7 @@ export class EKyteAction implements INodeType {
 				type: 'number',
 				required: true,
 				default: null,
+				description: 'The numeric ID of the task type',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -307,9 +334,10 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The unique identifier of the workspace where the item will be created',
 				displayOptions: {
 					show: {
-						operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'createNote'],
+						operation: ['createTask', 'createProject', 'createTicket', 'createBoard'],
 					},
 				},
 			},
@@ -318,6 +346,7 @@ export class EKyteAction implements INodeType {
 				name: 'initialExecutor',
 				type: 'string',
 				default: '',
+				description: 'The email address of the team member who will be assigned to execute this task',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -331,7 +360,7 @@ export class EKyteAction implements INodeType {
 				required: true,
 				default: 0,
 				description:
-					'Priority group (0-100, where 0=Not prioritized, 1-25=Low, 26-50=Medium, 51-75=High, 76-100=Urgent)',
+					'Priority level as a number from 0 to 100. Values: 0 = Not prioritized, 1-25 = Low priority, 26-50 = Medium priority, 51-75 = High priority, 76-100 = Urgent. Higher numbers indicate more urgent items.',
 				displayOptions: {
 					show: {
 						operation: ['createTask', 'createTicket'],
@@ -343,6 +372,7 @@ export class EKyteAction implements INodeType {
 				name: 'quantity',
 				type: 'number',
 				default: null,
+				description: 'Optional quantity associated with this task',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -354,6 +384,7 @@ export class EKyteAction implements INodeType {
 				name: 'ctcTaskProjectId',
 				type: 'number',
 				default: null,
+				description: 'Optional project ID to associate this task with. Linking a task to a project helps organize related work and track project progress.',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -362,18 +393,76 @@ export class EKyteAction implements INodeType {
 			},
 			{
 				displayName: 'Description',
-				name: 'description',
+				name: 'taskDescription',
 				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
 				default: '',
+				description: 'Additional details and context for the task',
 				displayOptions: {
 					show: {
-						operation: [
-							'createTask',
-							'createProject',
-							'createBoard',
-							'createNote',
-							'createWorkspace',
-						],
+						operation: ['createTask'],
+					},
+				},
+			},
+			{
+				displayName: 'Description',
+				name: 'projectDescription',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				description: 'Additional details and context for the project',
+				displayOptions: {
+					show: {
+						operation: ['createProject'],
+					},
+				},
+			},
+			{
+				displayName: 'Description',
+				name: 'boardDescription',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				description: 'Additional details and context for the board',
+				displayOptions: {
+					show: {
+						operation: ['createBoard'],
+					},
+				},
+			},
+			{
+				displayName: 'Description',
+				name: 'noteDescription',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				description: 'Additional details and context for the note',
+				displayOptions: {
+					show: {
+						operation: ['createNote'],
+					},
+				},
+			},
+			{
+				displayName: 'Description',
+				name: 'workspaceDescription',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				description: 'Additional details and context for the workspace',
+				displayOptions: {
+					show: {
+						operation: ['createWorkspace'],
 					},
 				},
 			},
@@ -383,7 +472,7 @@ export class EKyteAction implements INodeType {
 				type: 'dateTime',
 				required: true,
 				default: '',
-				description: 'Task start date',
+				description: 'The date when work on this task should begin. Use ISO 8601 format (e.g., 2024-01-15). This date is used for scheduling and workload planning.',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -396,7 +485,7 @@ export class EKyteAction implements INodeType {
 				type: 'dateTime',
 				required: true,
 				default: '',
-				description: 'Task due date',
+				description: 'The deadline by which the task must be completed. Use ISO 8601 format (e.g., 2024-01-20). Tasks past their due date will be flagged as overdue.',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -409,7 +498,7 @@ export class EKyteAction implements INodeType {
 				type: 'number',
 				required: true,
 				default: 60,
-				description: 'Estimated time in minutes',
+				description: 'The estimated effort required to complete this task, expressed in minutes. For example: 60 = 1 hour, 480 = 8 hours (1 day). Used for capacity planning and workload management.',
 				displayOptions: {
 					show: {
 						operation: ['createTask'],
@@ -428,6 +517,149 @@ export class EKyteAction implements INodeType {
 					},
 				},
 			},
+			// getManyTasks filter fields
+			{
+				displayName: 'Title',
+				name: 'filterTitle',
+				type: 'string',
+				default: '',
+				description: 'Filter tasks by title. Returns tasks whose title contains this text (case-insensitive partial match).',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Situation',
+				name: 'filterSituation',
+				type: 'multiOptions',
+				default: [],
+				description: 'Filter tasks by their current status. Select one or more situations: Active (in progress), Pause (temporarily stopped), Concluded (completed), Canceled (cancelled). Multiple selections are combined with OR logic.',
+				options: [
+					{
+						name: 'Active',
+						value: '10',
+						description: 'Tasks currently in progress',
+					},
+					{
+						name: 'Pause',
+						value: '20',
+						description: 'Tasks temporarily paused or on hold',
+					},
+					{
+						name: 'Concluded',
+						value: '30',
+						description: 'Tasks that have been completed',
+					},
+					{
+						name: 'Cancelled',
+						value: '40',
+						description: 'Tasks that were cancelled',
+					},
+				],
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Workspace ID',
+				name: 'filterWorkspaceId',
+				type: 'string',
+				default: '',
+				description: 'Filter tasks by workspace. Only returns tasks belonging to the specified workspace ID.',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Executor ID',
+				name: 'filterExecutorId',
+				type: 'string',
+				default: '',
+				description: 'Filter tasks by the assigned executor. Only returns tasks assigned to the specified user ID.',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Squad ID',
+				name: 'filterSquadId',
+				type: 'string',
+				default: '',
+				description: 'Filter tasks by squad. Only returns tasks belonging to the specified squad ID.',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Project ID',
+				name: 'filterProjectId',
+				type: 'string',
+				default: '',
+				description: 'Filter tasks by project. Only returns tasks associated with the specified project ID.',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Start Date',
+				name: 'filterStartDate',
+				type: 'dateTime',
+				default: '',
+				description: 'Filter tasks from this date onwards. Use with Period field to specify whether this applies to creation date or conclusion date. Format: ISO 8601 (e.g., 2024-01-01).',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'End Date',
+				name: 'filterEndDate',
+				type: 'dateTime',
+				default: '',
+				description: 'Filter tasks until this date. Use with Period field to specify whether this applies to creation date or conclusion date. Format: ISO 8601 (e.g., 2024-12-31).',
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
+			{
+				displayName: 'Period',
+				name: 'filterPeriod',
+				type: 'options',
+				default: '1',
+				description: 'Defines which date field the Start Date and End Date filters apply to. Select Creation to filter by when tasks were created, or Conclusion to filter by when tasks were completed.',
+				options: [
+					{
+						name: 'Creation',
+						value: '1',
+						description: 'Filter by task creation date',
+					},
+					{
+						name: 'Conclusion',
+						value: '2',
+						description: 'Filter by task completion/conclusion date',
+					},
+				],
+				displayOptions: {
+					show: {
+						operation: ['getManyTasks'],
+					},
+				},
+			},
 			// Project fields
 			{
 				displayName: 'Title',
@@ -435,6 +667,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The name of the project. Choose a clear, descriptive name that identifies the project purpose and scope.',
 				displayOptions: {
 					show: {
 						operation: ['createProject'],
@@ -446,6 +679,7 @@ export class EKyteAction implements INodeType {
 				name: 'alias',
 				type: 'string',
 				default: '',
+				description: 'A short code or abbreviation for the project (e.g., "PROJ", "MKT2024")',
 				displayOptions: {
 					show: {
 						operation: ['createProject'],
@@ -457,6 +691,7 @@ export class EKyteAction implements INodeType {
 				name: 'tags',
 				type: 'string',
 				default: '',
+				description: 'Comma-separated list of tags for categorizing and filtering the project (e.g., "marketing, Q1, high-priority")',
 				displayOptions: {
 					show: {
 						operation: ['createProject'],
@@ -468,7 +703,7 @@ export class EKyteAction implements INodeType {
 				name: 'startDate',
 				type: 'dateTime',
 				default: '',
-				description: 'Project start date',
+				description: 'The planned start date for the project. Use ISO 8601 format (e.g., 2024-01-15). Helps with project timeline planning and scheduling.',
 				displayOptions: {
 					show: {
 						operation: ['createProject'],
@@ -482,6 +717,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The subject line of the ticket. Should be a brief summary of the issue or request being reported.',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -491,11 +727,37 @@ export class EKyteAction implements INodeType {
 			{
 				displayName: 'Ticket Type',
 				name: 'ticketType',
-				type: 'string',
+				type: 'options',
 				required: true,
-				default: '',
-				description:
-					'Ticket Type (1-5, where 1=Request, 2=Question, 3=Bug Fix, 4=Quote, 5=Enhancement)',
+				default: '1',
+				description: 'The category of the ticket being created',
+				options: [
+					{
+						name: 'Request',
+						value: '1',
+						description: 'General service request',
+					},
+					{
+						name: 'Question',
+						value: '2',
+						description: 'Inquiry needing an answer',
+					},
+					{
+						name: 'Bug Fix',
+						value: '3',
+						description: 'Defect or error report',
+					},
+					{
+						name: 'Quote',
+						value: '4',
+						description: 'Pricing or proposal request',
+					},
+					{
+						name: 'Enhancement',
+						value: '5',
+						description: 'Feature improvement suggestion',
+					},
+				],
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -507,6 +769,7 @@ export class EKyteAction implements INodeType {
 				name: 'expectDueDate',
 				type: 'dateTime',
 				default: '',
+				description: 'The expected resolution date for this ticket. Use ISO 8601 format (e.g., 2024-01-20).',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -554,9 +817,13 @@ export class EKyteAction implements INodeType {
 			},
 			{
 				displayName: 'Description',
-				name: 'message',
+				name: 'ticketMessage',
 				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
 				default: '',
+				description: 'Detailed description of the ticket. Include all relevant information such as steps to reproduce, specific requirements, or context needed to address the request.',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
@@ -570,6 +837,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The title of the board. Boards are visual containers for organizing notes, ideas, and planning content.',
 				displayOptions: {
 					show: {
 						operation: ['createBoard'],
@@ -583,7 +851,7 @@ export class EKyteAction implements INodeType {
 				type: 'number',
 				required: true,
 				default: null,
-				description: 'Board/Plan ID where the note will be created',
+				description: 'The numeric ID of the board where the note will be created. Each board can contain multiple notes organized by category.',
 				displayOptions: {
 					show: {
 						operation: ['createNote'],
@@ -596,6 +864,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The title of the note. Should be descriptive and help identify the note content at a glance.',
 				displayOptions: {
 					show: {
 						operation: ['createNote'],
@@ -604,9 +873,13 @@ export class EKyteAction implements INodeType {
 			},
 			{
 				displayName: 'Content',
-				name: 'content',
+				name: 'noteContent',
 				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
 				default: '',
+				description: 'The main content body of the note. This is where the detailed information, documentation, or ideas should be written.',
 				displayOptions: {
 					show: {
 						operation: ['createNote'],
@@ -619,7 +892,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
-				description: 'Note category',
+				description: 'The category to classify this note. Categories help organize notes within a board (e.g., "Ideas", "Meeting Notes", "Requirements", "Research").',
 				displayOptions: {
 					show: {
 						operation: ['createNote'],
@@ -633,6 +906,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The name of the workspace. Workspaces are top-level containers that organize all work for a team, department, or business unit.',
 				displayOptions: {
 					show: {
 						operation: ['createWorkspace'],
@@ -644,6 +918,7 @@ export class EKyteAction implements INodeType {
 				name: 'squadId',
 				type: 'number',
 				default: null,
+				description: 'Optional squad ID to associate with this workspace',
 				displayOptions: {
 					show: {
 						operation: ['createWorkspace'],
@@ -714,7 +989,7 @@ export class EKyteAction implements INodeType {
 						PriorityGroup: this.getNodeParameter('priorityGroup', 0) as number,
 						...(quantity && { Quantity: quantity }),
 						...(ctcTaskProjectId && { CtcTaskProjectId: ctcTaskProjectId }),
-						Description: this.getNodeParameter('description', 0) as string,
+						Description: this.getNodeParameter('taskDescription', 0) as string,
 						PhaseStartDate: this.getNodeParameter('phaseStartDate', 0) as string,
 						CurrentDueDate: this.getNodeParameter('currentDueDate', 0) as string,
 						EstimatedTime: this.getNodeParameter('estimatedTime', 0) as number,
@@ -730,7 +1005,7 @@ export class EKyteAction implements INodeType {
 					requestBody = {
 						Name: this.getNodeParameter('projectName', 0) as string,
 						Alias: this.getNodeParameter('alias', 0) as string,
-						Description: this.getNodeParameter('description', 0) as string,
+						Description: this.getNodeParameter('projectDescription', 0) as string,
 						...(projectWorkspaceId && { WorkspaceId: projectWorkspaceId }),
 						Tags: this.getNodeParameter('tags', 0) as string,
 						StartDate: this.getNodeParameter('startDate', 0) as string,
@@ -741,7 +1016,7 @@ export class EKyteAction implements INodeType {
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
 					endpoint = `${baseUrl}/tickets`;
 					const ticketWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
-					const ticketType = this.getNodeParameter('ticketType', 0) as number;
+					const ticketType = parseInt(this.getNodeParameter('ticketType', 0) as string, 10);
 					requestBody = {
 						UserEmail: userEmail,
 						Subject: this.getNodeParameter('subject', 0) as string,
@@ -752,7 +1027,7 @@ export class EKyteAction implements INodeType {
 						RequesterEmail: this.getNodeParameter('requesterEmail', 0) as string,
 						UsersCC: this.getNodeParameter('usersCC', 0) as string,
 						AnalystEmail: this.getNodeParameter('analystEmail', 0) as string,
-						Message: this.getNodeParameter('message', 0) as string,
+						Message: this.getNodeParameter('ticketMessage', 0) as string,
 					};
 					break;
 
@@ -762,7 +1037,7 @@ export class EKyteAction implements INodeType {
 					const boardWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
 					requestBody = {
 						Title: this.getNodeParameter('boardTitle', 0) as string,
-						Description: this.getNodeParameter('description', 0) as string,
+						Description: this.getNodeParameter('boardDescription', 0) as string,
 						...(boardWorkspaceId && { WorkspaceId: boardWorkspaceId }),
 					};
 					break;
@@ -773,7 +1048,7 @@ export class EKyteAction implements INodeType {
 					const squadId = this.getNodeParameter('squadId', 0) as number;
 					requestBody = {
 						Name: this.getNodeParameter('workspaceName', 0) as string,
-						Description: this.getNodeParameter('description', 0) as string,
+						Description: this.getNodeParameter('workspaceDescription', 0) as string,
 						...(squadId && { SquadId: squadId }),
 					};
 					break;
@@ -785,8 +1060,8 @@ export class EKyteAction implements INodeType {
 					requestBody = {
 						...(planId && { PlanId: planId }),
 						Title: this.getNodeParameter('noteTitle', 0) as string,
-						Description: this.getNodeParameter('description', 0) as string,
-						Content: this.getNodeParameter('content', 0) as string,
+						Description: this.getNodeParameter('noteDescription', 0) as string,
+						Content: this.getNodeParameter('noteContent', 0) as string,
 						Category: this.getNodeParameter('category', 0) as string,
 					};
 					break;
@@ -1000,8 +1275,129 @@ export class EKyteAction implements INodeType {
 					registerTimestamp();
 					return [returnData];
 
+				case 'getTask':
+					const taskId = this.getNodeParameter('taskId', 0) as string;
+					endpoint = `${baseUrl}/polling/v3/task/${taskId}`;
+					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
+						method: 'GET',
+						url: endpoint,
+						returnFullResponse: true,
+						ignoreHttpStatusErrors: true,
+					});
+					// Check for errors
+					if (result.statusCode && result.statusCode >= 400) {
+						let errorMessage = `Error executing operation ${operation}`;
+						try {
+							const errorBody =
+								typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+							if (errorBody && errorBody.text) {
+								errorMessage = errorBody.id
+									? `[Error ${errorBody.id}] ${errorBody.text}`
+									: errorBody.text;
+							} else if (errorBody && errorBody.message) {
+								errorMessage = errorBody.message;
+							}
+						} catch (parseError) {
+							errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+						}
+						throw new NodeOperationError(this.getNode(), errorMessage);
+					}
+					const task = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+					returnData = [
+						{
+							json: task,
+							pairedItem: { item: 0 },
+						},
+					];
+					registerTimestamp();
+					return [returnData];
+
+				case 'getManyTasks':
+					endpoint = `${baseUrl}/polling/v3/tasks`;
+					// Build query string parameters for filters
+					const queryParams: Record<string, string> = {};
+
+					const filterTitle = this.getNodeParameter('filterTitle', 0) as string;
+					if (filterTitle) {
+						queryParams.Title = filterTitle;
+					}
+
+					const filterSituation = this.getNodeParameter('filterSituation', 0) as string[];
+					if (filterSituation && filterSituation.length > 0) {
+						queryParams.TaskSituation = filterSituation.join(',');
+					}
+
+					const filterWorkspaceId = this.getNodeParameter('filterWorkspaceId', 0) as string;
+					if (filterWorkspaceId) {
+						queryParams.WorkspaceId = filterWorkspaceId;
+					}
+
+					const filterExecutorId = this.getNodeParameter('filterExecutorId', 0) as string;
+					if (filterExecutorId) {
+						queryParams.ExecutorId = filterExecutorId;
+					}
+
+					const filterSquadId = this.getNodeParameter('filterSquadId', 0) as string;
+					if (filterSquadId) {
+						queryParams.SquadId = filterSquadId;
+					}
+
+					const filterProjectId = this.getNodeParameter('filterProjectId', 0) as string;
+					if (filterProjectId) {
+						queryParams.ProjectId = filterProjectId;
+					}
+
+					const filterStartDate = this.getNodeParameter('filterStartDate', 0) as string;
+					if (filterStartDate) {
+						queryParams.StartDate = filterStartDate;
+					}
+
+					const filterEndDate = this.getNodeParameter('filterEndDate', 0) as string;
+					if (filterEndDate) {
+						queryParams.EndDate = filterEndDate;
+					}
+
+					const filterPeriod = this.getNodeParameter('filterPeriod', 0) as string;
+					if (filterPeriod) {
+						queryParams.Period = filterPeriod;
+					}
+
+					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
+						method: 'GET',
+						url: endpoint,
+						qs: queryParams,
+						returnFullResponse: true,
+						ignoreHttpStatusErrors: true,
+					});
+					// Check for errors
+					if (result.statusCode && result.statusCode >= 400) {
+						let errorMessage = `Error executing operation ${operation}`;
+						try {
+							const errorBody =
+								typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+							if (errorBody && errorBody.text) {
+								errorMessage = errorBody.id
+									? `[Error ${errorBody.id}] ${errorBody.text}`
+									: errorBody.text;
+							} else if (errorBody && errorBody.message) {
+								errorMessage = errorBody.message;
+							}
+						} catch (parseError) {
+							errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+						}
+						throw new NodeOperationError(this.getNode(), errorMessage);
+					}
+					const manyTasks =
+						typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+					returnData = manyTasks.map((taskItem: any, i: number) => ({
+						json: taskItem,
+						pairedItem: { item: i },
+					}));
+					registerTimestamp();
+					return [returnData];
+
 				case 'getTicketsChanged':
-					endpoint = `${baseUrl}/polling/tickets/concluded`;
+					endpoint = `${baseUrl}/polling/tickets/changes`;
 					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
 						method: 'GET',
 						url: endpoint,
@@ -1036,7 +1432,7 @@ export class EKyteAction implements INodeType {
 					return [returnData];
 
 				case 'getTicketsClosed':
-					endpoint = `${baseUrl}/polling/tickets/changes`;
+					endpoint = `${baseUrl}/polling/tickets/concluded`;
 					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
 						method: 'GET',
 						url: endpoint,
