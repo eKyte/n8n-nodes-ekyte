@@ -966,14 +966,15 @@ export class EKyteAction implements INodeType {
 				name: 'artifactIds',
 				type: 'multiOptions',
 				options: [],
-				default: null,
+				allowCustomOptions: true,
+				default: [],
 				description: 'List of artifact numeric IDs',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
 					},
 				},
-			},			
+			},
 		],
 	};
 
