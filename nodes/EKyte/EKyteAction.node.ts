@@ -966,7 +966,7 @@ export class EKyteAction implements INodeType {
 				name: 'artifactIds',
 				type: 'multiOptions',
 				options: [],
-				default: '',
+				default: [''],
 				description: 'List of artifact numeric IDs',
 				displayOptions: {
 					show: {
