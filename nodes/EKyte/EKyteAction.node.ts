@@ -63,6 +63,10 @@ export class EKyteAction implements INodeType {
 						name: 'Workspace',
 						value: 'workspaces',
 					},
+					{
+						name: 'Artifact',
+						value: 'artifacts',
+					},
 				],
 				default: 'task',
 			},
@@ -261,10 +265,30 @@ export class EKyteAction implements INodeType {
 				default: 'createWorkspace',
 			},
 			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['artifacts'],
+					},
+				},
+				options: [
+					{
+						name: 'Add',
+						value: 'addArtifact',
+						description: 'Add a new artifact to be attached on ticket',
+						action: 'Add artifact',
+					},
+				],
+				default: 'addArtifact',
+			},
+			{
 				displayName: 'Base URL',
 				name: 'baseUrl',
 				type: 'hidden',
-				default: 'https://api.ekyte.com/n8n',
+				default: 'https://apistaging.ekyte.com/n8n',
 				description: 'The base URL for eKyte API',
 			},
 			{
@@ -337,7 +361,7 @@ export class EKyteAction implements INodeType {
 				description: 'The unique identifier of the workspace where the item will be created',
 				displayOptions: {
 					show: {
-						operation: ['createTask', 'createProject', 'createTicket', 'createBoard'],
+						operation: ['createTask', 'createProject', 'createTicket', 'createBoard', 'addArtifact'],
 					},
 				},
 			},
@@ -925,6 +949,31 @@ export class EKyteAction implements INodeType {
 					},
 				},
 			},
+			{
+				displayName: 'File',
+				name: 'fileBinary',
+				type: 'string',
+				default: null,
+				description: 'File to be attached on ticket',
+				displayOptions: {
+					show: {
+						operation: ['addArtifact'],
+					},
+				},
+			},
+			{
+				displayName: 'Artifact IDs',
+				name: 'artifactIds',
+				type: 'multiOptions',
+				options: [],
+				default: [],
+				description: 'List of artifact numeric IDs',
+				displayOptions: {
+					show: {
+						operation: ['createTicket'],
+					},
+				},
+			},			
 		],
 	};
 
@@ -1017,6 +1066,7 @@ export class EKyteAction implements INodeType {
 					endpoint = `${baseUrl}/tickets`;
 					const ticketWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
 					const ticketType = parseInt(this.getNodeParameter('ticketType', 0) as string, 10);
+					const artifactIds = this.getNodeParameter('artifactIds', 0) as string[];
 					requestBody = {
 						UserEmail: userEmail,
 						Subject: this.getNodeParameter('subject', 0) as string,
@@ -1028,6 +1078,15 @@ export class EKyteAction implements INodeType {
 						UsersCC: this.getNodeParameter('usersCC', 0) as string,
 						AnalystEmail: this.getNodeParameter('analystEmail', 0) as string,
 						Message: this.getNodeParameter('ticketMessage', 0) as string,
+						Artifacts: artifactIds,
+					};
+					break;
+
+				case 'addArtifact':
+					endpoint = `${baseUrl}/artifacts`;
+					requestBody = {
+						 WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
+						 File: this.getNodeParameter('fileBinary', 0) as string,
 					};
 					break;
 
