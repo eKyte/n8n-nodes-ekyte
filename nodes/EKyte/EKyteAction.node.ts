@@ -953,7 +953,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'File',
 				name: 'fileBinary',
 				type: 'string',
-				default: null,
+				default: '',
 				description: 'File to be attached on ticket',
 				displayOptions: {
 					show: {
@@ -964,7 +964,6 @@ export class EKyteAction implements INodeType {
 			{
 				displayName: 'Artifact IDs',
 				name: 'artifactIds',
-				required: false,
 				type: 'number',
 				default: null,
 				description: 'List of artifact numeric IDs',
