@@ -36,6 +36,10 @@ export class EKyteAction implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
+						name: 'Artifact',
+						value: 'artifacts',
+					},
+					{
 						name: 'Board',
 						value: 'board',
 					},
@@ -62,10 +66,6 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Workspace',
 						value: 'workspaces',
-					},
-					{
-						name: 'Artifact',
-						value: 'artifacts',
 					},
 				],
 				default: 'task',
@@ -966,7 +966,7 @@ export class EKyteAction implements INodeType {
 				name: 'artifactIds',
 				type: 'multiOptions',
 				options: [],
-				default: [],
+				default: null,
 				description: 'List of artifact numeric IDs',
 				displayOptions: {
 					show: {
