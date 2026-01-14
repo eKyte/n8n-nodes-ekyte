@@ -475,6 +475,18 @@ export class EKyteAction implements INodeType {
 					},
 				},
 			},
+
+			{
+				displayName: 'Source Project ID',
+				name: 'sourceProjectId',
+				type: 'number',
+				default: 0,
+				displayOptions: {
+					show: {
+						operation: ['createProject'],
+					},
+				},
+			},
 			// Ticket fields
 			{
 				displayName: 'Subject',
@@ -727,11 +739,13 @@ export class EKyteAction implements INodeType {
 					userEmail = this.getNodeParameter('userEmail', 0) as string;
 					endpoint = `${baseUrl}/projects`;
 					const projectWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
+					const sourceProjectId = this.getNodeParameter('sourceProjectId', 0) as number;
 					requestBody = {
 						Name: this.getNodeParameter('projectName', 0) as string,
 						Alias: this.getNodeParameter('alias', 0) as string,
 						Description: this.getNodeParameter('description', 0) as string,
 						...(projectWorkspaceId && { WorkspaceId: projectWorkspaceId }),
+						...(sourceProjectId && { sourceProjectId }),
 						Tags: this.getNodeParameter('tags', 0) as string,
 						StartDate: this.getNodeParameter('startDate', 0) as string,
 					};
