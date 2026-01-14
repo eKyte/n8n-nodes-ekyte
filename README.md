@@ -4,6 +4,10 @@ This is an n8n community node that lets you integrate with the eKyte API to mana
 
 eKyte is a Digital Marketing Management Platform for High Performance.
 
+## AI Tool Support
+
+This node is configured with `usableAsTool: true`, which means it can be used as a tool by AI agents in n8n. All operations have detailed descriptions to help AI understand and use each field correctly.
+
 ## Installation
 
 ### Community Nodes (Recommended)
@@ -43,32 +47,41 @@ To obtain these credentials:
 The eKyte node is organized by resources, each with specific operations:
 
 ### Board
-- **Create**: Create a new eKyte board
-- **Get All**: Retrieve all boards
+
+- **Create**: Create a new board for organizing notes and planning content
+- **Get All**: Retrieve all boards accessible to the authenticated user
 
 ### Note
-- **Create**: Create a new note
+
+- **Create**: Create a new note inside a board with title, content, and category
 
 ### Project
-- **Create**: Create a new project
-- **Get All**: Retrieve all projects
+
+- **Create**: Create a new project to group related tasks and track progress
+- **Get All**: Retrieve all projects accessible to the authenticated user
 
 ### Task
-- **Create**: Create a new task
-- **Get All**: Retrieve all tasks
-- **Get All with Phase**: Retrieve tasks with phase information
+
+- **Create**: Create a new task with title, dates, priority, and assignment
+- **Get**: Retrieve a single task by its unique ID
+- **Get Many (with Filters)**: Search and filter tasks by title, status, workspace, executor, squad, project, or date range
+- **Get Recent**: Retrieve tasks created or updated in the last 15 minutes (basic info)
+- **Get Recent (with Phase)**: Retrieve tasks with phase/stage information from the last 15 minutes
 
 ### Ticket
-- **Create**: Create a new support ticket
-- **Get Changed**: Retrieve tickets updated in the last 15 minutes
-- **Get Closed**: Retrieve tickets closed in the last 15 minutes
+
+- **Create**: Create a new support ticket with subject, type, priority, and requester information
+- **Get Concluded**: Retrieve tickets that were concluded/closed in the last 15 minutes
+- **Get Updated**: Retrieve tickets that had any changes/updates in the last 15 minutes
 
 ### Notification
-- **Get All**: Retrieve notifications for a user
+
+- **Get All**: Retrieve all unread notifications for the specified user
 
 ### Workspace
-- **Create**: Create a new workspace
-- **Get All**: Retrieve all workspaces
+
+- **Create**: Create a new workspace for a team or department
+- **Get All**: Retrieve all workspaces accessible to the authenticated user
 
 ## Node Usage
 
