@@ -6,6 +6,8 @@ import {
 	NodeOperationError,
 } from 'n8n-workflow';
 
+import FormData from 'form-data';
+
 export class EKyteAction implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'eKyte',
@@ -301,6 +303,7 @@ export class EKyteAction implements INodeType {
 				displayOptions: {
 					show: {
 						operation: [
+							'addArtifact',		
 							'createTask',
 							'createProject',
 							'createTicket',
@@ -977,7 +980,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Artifact IDs',
 				name: 'artifactIds',
 				type: 'number',
-				default: 0,
+				default: [],
 				placeholder: 'Digite o ID',
 				description: 'List of artifact numeric IDs',
 				displayOptions: {
@@ -1034,6 +1037,9 @@ export class EKyteAction implements INodeType {
 			let returnData: INodeExecutionData[] = [];
 			let result: any;
 			let endpoint = '';
+			let headers: any = {
+					'Content-Type': 'application/json',
+				};
 			let requestBody: any = {};
 
 			switch (operation) {
@@ -1101,10 +1107,22 @@ export class EKyteAction implements INodeType {
 
 				case 'addArtifact':
 					endpoint = `${baseUrl}/artifacts`;
-					requestBody = {
-						 WorkspaceId: this.getNodeParameter('workspaceId', 0) as number,
-						 File: this.getNodeParameter('fileBinary', 0) as string,
-					};
+					headers = {};
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					const workspaceId = this.getNodeParameter('workspaceId', 0) as number;
+					const fileProperty = this.getNodeParameter('fileBinary', 0) as string;				
+					const binaryData = await this.helpers.getBinaryDataBuffer(0, fileProperty);
+					const item = this.getInputData()[0];		
+					const fileName = item.binary?.[fileProperty]?.fileName;
+					const mimeType = item.binary?.[fileProperty]?.mimeType;
+					const formData = new FormData();  				
+  					formData.append('WorkspaceId', workspaceId.toString());
+					formData.append('UserEmail', userEmail);
+					formData.append('File', binaryData, {
+						filename: fileName,
+						contentType: mimeType,
+					});
+					requestBody = formData;
 					break;
 
 				case 'createBoard':
@@ -1553,9 +1571,7 @@ export class EKyteAction implements INodeType {
 					UserEmail: userEmail,
 				},
 				body: requestBody,
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers: headers,
 				returnFullResponse: true,
 				ignoreHttpStatusErrors: true,
 			});
