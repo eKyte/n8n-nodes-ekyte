@@ -957,7 +957,7 @@ export class EKyteAction implements INodeType {
 				name: 'squadId',
 				type: 'number',
 				default: null,
-				description: 'Optional squad ID to associate with this workspace ',
+				description: 'Optional squad ID to associate with this workspace',
 				displayOptions: {
 					show: {
 						operation: ['createWorkspace'],
@@ -979,18 +979,26 @@ export class EKyteAction implements INodeType {
 			{
 				displayName: 'Artifact IDs',
 				name: 'artifactIds',
-				type: 'number',
-				default: [],
-				placeholder: 'Digite o ID',
-				description: 'List of artifact numeric IDs',
+				type: 'collection',
+				placeholder: 'Adicionar IDs',
+				description: 'Lista de IDs numéricos de artefatos',
 				displayOptions: {
 					show: {
 						operation: ['createTicket'],
 					},
 				},
-				typeOptions: {
-					multipleValues: true,
-				},
+				default: null,
+				options: [
+					{
+						displayName: 'IDs',
+						name: 'ids',
+						type: 'number',
+						default: 0,
+						typeOptions: {
+							multipleValues: true,
+						},
+					},
+				],
 			}
 		],
 	};
@@ -1089,7 +1097,8 @@ export class EKyteAction implements INodeType {
 					endpoint = `${baseUrl}/tickets`;
 					const ticketWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
 					const ticketType = parseInt(this.getNodeParameter('ticketType', 0) as string, 10);
-					const artifactIds = this.getNodeParameter('artifactIds', 0) as string[];
+					const artifactCollection = this.getNodeParameter('artifactIds', 0) as { ids: number[] };
+					const artifactIds = artifactCollection.ids;
 					requestBody = {
 						UserEmail: userEmail,
 						Subject: this.getNodeParameter('subject', 0) as string,
