@@ -957,7 +957,7 @@ export class EKyteAction implements INodeType {
 				name: 'squadId',
 				type: 'number',
 				default: null,
-				description: 'Optional squad ID to associate with this workspace',
+				description: 'Optional squad ID to associate with this workspace ',
 				displayOptions: {
 					show: {
 						operation: ['createWorkspace'],
