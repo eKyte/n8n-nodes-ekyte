@@ -290,7 +290,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Base URL',
 				name: 'baseUrl',
 				type: 'hidden',
-				default: 'https://apistaging.ekyte.com/n8n',
+				default: 'http://host.docker.internal:5000/n8n',
 				description: 'The base URL for eKyte API',
 			},
 			{
@@ -984,7 +984,7 @@ export class EKyteAction implements INodeType {
 				description: 'Lista de IDs numéricos de artefatos',
 				displayOptions: {
 					show: {
-						operation: ['createTicket'],
+						operation: ['createTask', 'createTicket'],
 					},
 				},
 				default: null,
@@ -1058,6 +1058,8 @@ export class EKyteAction implements INodeType {
 					const taskWorkspaceId = this.getNodeParameter('workspaceId', 0) as number;
 					const quantity = this.getNodeParameter('quantity', 0) as number;
 					const ctcTaskProjectId = this.getNodeParameter('ctcTaskProjectId', 0) as number;
+                    const taskArtifactCollection = this.getNodeParameter('artifactIds', 0) as { ids: number[] };
+					const taskArtifactIds = taskArtifactCollection.ids;
 					initialExecutor = this.getNodeParameter('initialExecutor', 0) as string;
 					requestBody = {
 						UserEmail: userEmail,
@@ -1073,6 +1075,7 @@ export class EKyteAction implements INodeType {
 						EstimatedTime: this.getNodeParameter('estimatedTime', 0) as number,
 						PlanTask: this.getNodeParameter('planTask', 0) as boolean,
 						InitialExecutor: initialExecutor,
+						Artifacts: taskArtifactIds,
 					};
 					break;
 
