@@ -290,7 +290,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Base URL',
 				name: 'baseUrl',
 				type: 'hidden',
-				default: 'http://host.docker.internal:5000/n8n',
+				default: 'https://apistaging.ekyte.com/n8n',
 				description: 'The base URL for eKyte API',
 			},
 			{
