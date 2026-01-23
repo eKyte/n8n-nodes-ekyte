@@ -1,6 +1,6 @@
 {
   "name": "@ekyte/n8n-nodes-ekyte",
-  "version": "1.1.1-beta.6",
+  "version": "1.1.1-beta.7",
   "description": "Custom n8n nodes for eKyte API integration",
   "keywords": [
     "n8n-community-node-package",
