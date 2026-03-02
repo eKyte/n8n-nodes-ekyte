@@ -54,6 +54,10 @@ export class EKyteAction implements INodeType {
 						value: 'notifications',
 					},
 					{
+						name: 'PI',
+						value: 'PI',
+					},
+					{
 						name: 'Project',
 						value: 'project',
 					},
@@ -287,6 +291,56 @@ export class EKyteAction implements INodeType {
 				default: 'addArtifact',
 			},
 			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['PI'],
+					},
+				},
+				options: [
+					{
+						name: 'Get',
+						value: 'getPerson',
+						description: 'Retrieve a person by id',
+						action: 'Get Person',
+					},
+					{
+						name: 'Get Many',
+						value: 'getManyPersons',
+						description: 'Retrieve a person by filter',
+						action: 'Get many persons with filters',
+					},
+					{
+						name: 'Create Person',
+						value: 'createPerson',
+						description: 'Create a person record',
+						action: 'Create person',
+					},
+					{
+						name: 'Create Person Contact',
+						value: 'createPersonContact',
+						description: 'Create a person contact record',
+						action: 'Create person contact',
+					},
+					{
+						name: 'Create Person Address',
+						value: 'createPersonAddress',
+						description: 'Create a person address record',
+						action: 'Create person address',
+					},
+					{
+						name: 'Create Person Bank Data',
+						value: 'createPersonBankData',
+						description: 'Create a person bank data record',
+						action: 'Create person bank data',
+					}
+				],
+				default: 'getPerson',
+			},
+			{
 				displayName: 'Base URL',
 				name: 'baseUrl',
 				type: 'hidden',
@@ -311,6 +365,10 @@ export class EKyteAction implements INodeType {
 							'createNote',
 							'createWorkspace',
 							'getNotifications',
+							'createPerson',
+							'createPersonContact',
+							'createPersonAddress',
+							'createPersonBankData'
 						],
 					},
 				},
@@ -999,10 +1057,566 @@ export class EKyteAction implements INodeType {
 						},
 					},
 				],
+			},
+			{
+				displayName: 'Person ID',
+				name: 'personId',
+				type: 'string',
+				required: true,
+				default: '',
+				description: 'The unique numeric identifier of the person to retrieve. You can find this ID in the person URL or by listing persons first.',
+				displayOptions: {
+					show: {
+						operation: ['getPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Name',
+				name: 'personNameFilter',
+				type: 'string',
+				required: false,
+				default: '',
+				description: 'The name of the person to retrieve.',
+				displayOptions: {
+					show: {
+						operation: ['getManyPersons'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Type',
+				name: 'personTypeFilter',
+				type: 'options',
+				required: false,
+				default: '',
+				description: 'The type of the person.',
+				options: [
+					{
+						name: '',
+						value: '',
+					},
+					{
+						name: 'PF',
+						value: '10',
+					},
+					{
+						name: 'PJ',
+						value: '20',
+					}
+				],
+				displayOptions: {
+					show: {
+						operation: ['getManyPersons'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Profile',
+				name: 'personProfile',
+				type: 'options',
+				required: false,
+				default: '',
+				description: 'The profile of the person to retrieve.',
+				options: [
+					{
+						name: '',
+						value: ''
+					},
+					{
+						name: 'Customer',
+						value: '10',
+					},
+					{
+						name: 'Supplier',
+						value: '20',
+					},
+					{
+						name: 'Vehicle',
+						value: '30',
+					}
+				],
+				displayOptions: {
+					show: {
+						operation: ['getManyPersons'],
+					},
+				},
+			},
+			{
+				displayName: 'Person ID',
+				name: 'personId',
+				type: 'string',
+				required: true,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact', 'createPersonAddress', 'createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Name',
+				name: 'name',
+				type: 'string',
+				required: true,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Alias',
+				name: 'personAlias',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Born At',
+				name: 'personBornAt',
+				type: 'dateTime',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Document',
+				name: 'personDocument',
+				type: 'string',
+				required: false,
+				default: '',
+				description: 'The document of the person.',
+				displayOptions: {
+					show: {
+						operation: ['getManyPersons', 'createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Type',
+				name: 'personType',
+				type: 'options',
+				required: true,
+				default: '10',
+				description: 'The type of the person.',
+				options: [
+					{
+						name: 'PF',
+						value: '10',
+					},
+					{
+						name: 'PJ',
+						value: '20',
+					}
+				],
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Id Card Number',
+				name: 'personIdCardNumber',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'State Registration',
+				name: 'personStateRegistration',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'State Registration Optional',
+				name: 'personStateRegistrationOptional',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Municipal Registration',
+				name: 'personMunicipalRegistration',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Vehicle',
+				name: 'personIsVehicle',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Supplier',
+				name: 'personIsSupplier',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Customer',
+				name: 'personIsCustomer',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Person Email',
+				name: 'email',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Site',
+				name: 'personSite',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Phone',
+				name: 'phone',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonContact', 'createPersonAddress'],
+
+					},
+				},
+			},
+			{
+				displayName: 'Notes',
+				name: 'notes',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Avatar Id',
+				name: 'personAvatarId',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Tag IDs',
+				name: 'tagIds',
+				type: 'collection',
+				placeholder: 'Add Tag IDs',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonContact'],
+					},
+				},
+				default: null,
+				options: [
+					{
+						displayName: 'IDs',
+						name: 'ids',
+						type: 'number',
+						default: 0,
+						typeOptions: {
+							multipleValues: true,
+						},
+					},
+				],
+			},
+			{
+				displayName: 'Is Main',
+				name: 'isMain',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress', 'createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Contact Email',
+				name: 'email',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Is Charge',
+				name: 'addressIsCharge',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Is Correspondence',
+				name: 'addressIsCorrespondence',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Zip Code',
+				name: 'addressZipCode',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Address',
+				name: 'addressDescription',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'District',
+				name: 'addressDistrict',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Number',
+				name: 'addressNumber',	
+				type: 'number',
+				default: undefined,
+				required: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'No Number',
+				name: 'addressNoNumber',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Complement',
+				name: 'addressComplement',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Address Email',
+				name: 'email',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'City Id',
+				name: 'addressCityId',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'State Id',
+				name: 'addressStateId',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Bank',
+				name: 'bankName',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Account Type',
+				name: 'bankAccountType',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Bank Agency',
+				name: 'bankAgency',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Account Number',
+				name: 'bankAccountNumber',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+
+					},
+				},
+			},
+			{
+				displayName: 'Bank Notes',
+				name: 'bankNotes',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Pix Key',
+				name: 'bankPixKey',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
+			},
+			{
+				displayName: 'Pix Description',
+				name: 'bankPixDescription',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonBankData'],
+					},
+				},
 			}
 		],
 	};
-
+	
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const operation = this.getNodeParameter('operation', 0) as string;
 
@@ -1169,6 +1783,103 @@ export class EKyteAction implements INodeType {
 						Description: this.getNodeParameter('noteDescription', 0) as string,
 						Content: this.getNodeParameter('noteContent', 0) as string,
 						Category: this.getNodeParameter('category', 0) as string,
+					};
+					break;
+					
+				case 'createPerson':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					endpoint = `${baseUrl}/persons`;
+
+					const tagCollection = this.getNodeParameter('tagIds', 0) as { ids: number[] };
+					const tagIds = tagCollection?.ids ?? [];
+					const tagsFormatted = tagIds.map(id => ({
+						Id: id.toString(),
+					}));
+					
+					requestBody = {
+						UserEmail: userEmail,
+						Name: this.getNodeParameter('name', 0) as string,
+						Alias: this.getNodeParameter('personAlias', 0) as string,
+						BornAt: this.getNodeParameter('personBornAt', 0) as string,
+						Type: this.getNodeParameter('personType', 0) as string,
+						Document: this.getNodeParameter('personDocument', 0) as string,
+						IdCardNumber: this.getNodeParameter('personIdCardNumber', 0) as string,
+						StateRegistration: this.getNodeParameter('personStateRegistration', 0) as string,
+						StateRegistrationOptional: this.getNodeParameter('personStateRegistrationOptional', 0) as boolean,
+						MunicipalRegistration: this.getNodeParameter('personMunicipalRegistration', 0) as string,
+						IsVehicle: this.getNodeParameter('personIsVehicle', 0) as boolean,
+						IsSupplier: this.getNodeParameter('personIsSupplier', 0) as boolean,
+						IsCustomer: this.getNodeParameter('personIsCustomer', 0) as boolean,
+						Email: this.getNodeParameter('email', 0) as string,
+						Site: this.getNodeParameter('personSite', 0) as string,
+						Phone: this.getNodeParameter('phone', 0) as string,
+						Notes: this.getNodeParameter('notes', 0) as string,
+						AvatarId: this.getNodeParameter('personAvatarId', 0) as string,
+						Tags: tagsFormatted
+					};
+					break;
+
+				case 'createPersonContact':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					endpoint = `${baseUrl}/persons/contacts`;
+
+					 const contactTagCollection = this.getNodeParameter('tagIds', 0) as { ids: number[] };
+					 const contactTagIds = contactTagCollection?.ids ?? [];
+					 const contactTagsFormatted = contactTagIds.map(id => ({
+						Id: id.toString(),
+					}));
+					
+					requestBody = {
+						UserEmail: userEmail,
+						PersonId: this.getNodeParameter('personId', 0) as string,
+						Name: this.getNodeParameter('name', 0) as string,
+						Email: this.getNodeParameter('email', 0) as string,
+						Phone: this.getNodeParameter('phone', 0) as string,
+						Tags: contactTagsFormatted
+					};
+					break;
+
+				case 'createPersonAddress':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					endpoint = `${baseUrl}/persons/addresses`;
+
+					const addressNumber = this.getNodeParameter('addressNumber', 0, null);
+
+					requestBody = {
+						UserEmail: userEmail,
+						PersonId: this.getNodeParameter('personId', 0) as string,
+						IsMain: this.getNodeParameter('isMain', 0) as boolean,
+						IsCharge: this.getNodeParameter('addressIsCharge', 0) as boolean,
+						IsCorrespondence: this.getNodeParameter('addressIsCorrespondence', 0) as boolean,
+						Name: this.getNodeParameter('addressDescription', 0) as string,
+						ZipCode: this.getNodeParameter('addressZipCode', 0) as string,
+						...(addressNumber && { Number: addressNumber }),
+						District: this.getNodeParameter('addressDistrict', 0) as string,
+						NoNumber: this.getNodeParameter('addressNoNumber', 0) as boolean,
+						Complement: this.getNodeParameter('addressComplement', 0) as string,
+						Email: this.getNodeParameter('email', 0) as string,
+						Phone: this.getNodeParameter('phone', 0) as string,
+						Notes: this.getNodeParameter('notes', 0) as string,
+						CityId: this.getNodeParameter('addressCityId', 0) as string,
+						StateId: this.getNodeParameter('addressStateId', 0) as string,
+					};
+					break;
+
+				case 'createPersonBankData':
+					userEmail = this.getNodeParameter('userEmail', 0) as string;
+					endpoint = `${baseUrl}/persons/bank-data`;
+					
+					requestBody = {
+						UserEmail: userEmail,
+						PersonId: this.getNodeParameter('personId', 0) as string,
+						Bank: this.getNodeParameter('bankName', 0) as string,
+						AccountType: this.getNodeParameter('bankAccountType', 0) as string,
+						BankAgency: this.getNodeParameter('bankAgency', 0) as string,
+						AccountNumber: this.getNodeParameter('bankAccountNumber', 0) as string,
+						BankNotes: this.getNodeParameter('bankNotes', 0) as string,
+						PixKey: this.getNodeParameter('bankPixKey', 0) as string,
+						PixDescription: this.getNodeParameter('bankPixDescription', 0) as string,
+						IsMain: this.getNodeParameter('isMain', 0) as boolean,
 					};
 					break;
 
@@ -1571,6 +2282,102 @@ export class EKyteAction implements INodeType {
 					}));
 					registerTimestamp();
 					return [returnData];
+				
+				case 'getPerson':
+					const personId = this.getNodeParameter('personId', 0) as string;
+					endpoint = `${baseUrl}/polling/persons/${personId}`;
+					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
+						method: 'GET',
+						url: endpoint,
+						returnFullResponse: true,
+						ignoreHttpStatusErrors: true,
+					});
+
+					if (result.statusCode && result.statusCode >= 400) {
+						let errorMessage = `Error executing operation ${operation}`;
+						try {
+							const errorBody =
+								typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+							if (errorBody && errorBody.text) {
+								errorMessage = errorBody.id
+									? `[Error ${errorBody.id}] ${errorBody.text}`
+									: errorBody.text;
+							} else if (errorBody && errorBody.message) {
+								errorMessage = errorBody.message;
+							}
+						} catch (parseError) {
+							errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+						}
+						throw new NodeOperationError(this.getNode(), errorMessage);
+					}
+					const person = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+					returnData = [
+						{
+							json: person,
+							pairedItem: { item: 0 },
+						},
+					];
+					registerTimestamp();
+					return [returnData];
+
+				case 'getManyPersons':
+						endpoint = `${baseUrl}/polling/persons`;
+						const queryPersonParams: Record<string, string> = {};
+					
+						const filterPersonName = this.getNodeParameter('personNameFilter', 0) as string;
+						const filterPersonDocument = this.getNodeParameter('personDocument', 0) as string;
+						const filterPersonType = this.getNodeParameter('personTypeFilter', 0) as string;
+						const filterPersonProfileId = this.getNodeParameter('personProfile', 0) as string;
+					
+						if (filterPersonName) {
+							queryPersonParams.Name = filterPersonName;
+						}
+
+						if (filterPersonDocument) {
+							queryPersonParams.Document = filterPersonDocument;
+						}
+
+						if (filterPersonType) {
+							queryPersonParams.PersonType = filterPersonType;
+						}
+
+						if (filterPersonProfileId) {
+							queryPersonParams.ProfileId = filterPersonProfileId;
+						}
+
+						result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
+							method: 'GET',
+							url: endpoint,
+							qs: queryPersonParams,
+							returnFullResponse: true,
+							ignoreHttpStatusErrors: true
+						});
+						if (result.statusCode && result.statusCode >= 400) {
+							let errorMessage = `Error executing operation ${operation}`;
+							try {
+								const errorBody =
+								typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+								if (errorBody && errorBody.text) {
+									errorMessage = errorBody.id
+									? `[Error ${errorBody.id}] ${errorBody.text}`
+									: errorBody.text;
+								} else if (errorBody && errorBody.message) {
+									errorMessage = errorBody.message;
+								}
+							} catch (parseError) {
+								errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+							}
+							throw new NodeOperationError(this.getNode(), errorMessage);
+						}
+						const persons = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+						returnData = [
+							{
+								json: persons,
+								pairedItem: { item: 0 },
+							},
+						];
+						registerTimestamp();
+						return [returnData];
 
 				default:
 					throw new NodeOperationError(this.getNode(), `Operation ${operation} not supported`);
