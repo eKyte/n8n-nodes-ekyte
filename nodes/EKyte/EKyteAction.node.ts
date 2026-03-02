@@ -302,28 +302,10 @@ export class EKyteAction implements INodeType {
 				},
 				options: [
 					{
-						name: 'Get',
-						value: 'getPerson',
-						description: 'Retrieve a person by id',
-						action: 'Get Person',
-					},
-					{
-						name: 'Get Many',
-						value: 'getManyPersons',
-						description: 'Retrieve a person by filter',
-						action: 'Get many persons with filters',
-					},
-					{
 						name: 'Create Person',
 						value: 'createPerson',
 						description: 'Create a person record',
 						action: 'Create person',
-					},
-					{
-						name: 'Create Person Contact',
-						value: 'createPersonContact',
-						description: 'Create a person contact record',
-						action: 'Create person contact',
 					},
 					{
 						name: 'Create Person Address',
@@ -336,7 +318,25 @@ export class EKyteAction implements INodeType {
 						value: 'createPersonBankData',
 						description: 'Create a person bank data record',
 						action: 'Create person bank data',
-					}
+					},
+					{
+						name: 'Create Person Contact',
+						value: 'createPersonContact',
+						description: 'Create a person contact record',
+						action: 'Create person contact',
+					},
+					{
+						name: 'Get',
+						value: 'getPerson',
+						description: 'Retrieve a person by ID',
+						action: 'Get person',
+					},
+					{
+						name: 'Get Many',
+						value: 'getManyPersons',
+						description: 'Retrieve a person by filter',
+						action: 'Get many persons with filters',
+					},
 				],
 				default: 'getPerson',
 			},
@@ -1075,9 +1075,8 @@ export class EKyteAction implements INodeType {
 				displayName: 'Person Name',
 				name: 'personNameFilter',
 				type: 'string',
-				required: false,
 				default: '',
-				description: 'The name of the person to retrieve.',
+				description: 'The name of the person to retrieve',
 				displayOptions: {
 					show: {
 						operation: ['getManyPersons'],
@@ -1088,9 +1087,8 @@ export class EKyteAction implements INodeType {
 				displayName: 'Person Type',
 				name: 'personTypeFilter',
 				type: 'options',
-				required: false,
 				default: '',
-				description: 'The type of the person.',
+				description: 'The type of the person',
 				options: [
 					{
 						name: '',
@@ -1115,9 +1113,8 @@ export class EKyteAction implements INodeType {
 				displayName: 'Person Profile',
 				name: 'personProfile',
 				type: 'options',
-				required: false,
 				default: '',
-				description: 'The profile of the person to retrieve.',
+				description: 'The profile of the person to retrieve',
 				options: [
 					{
 						name: '',
@@ -1170,7 +1167,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Alias',
 				name: 'personAlias',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1182,7 +1178,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Born At',
 				name: 'personBornAt',
 				type: 'dateTime',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1194,9 +1189,8 @@ export class EKyteAction implements INodeType {
 				displayName: 'Person Document',
 				name: 'personDocument',
 				type: 'string',
-				required: false,
 				default: '',
-				description: 'The document of the person.',
+				description: 'The document of the person',
 				displayOptions: {
 					show: {
 						operation: ['getManyPersons', 'createPerson'],
@@ -1209,7 +1203,7 @@ export class EKyteAction implements INodeType {
 				type: 'options',
 				required: true,
 				default: '10',
-				description: 'The type of the person.',
+				description: 'The type of the person',
 				options: [
 					{
 						name: 'PF',
@@ -1227,10 +1221,9 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Id Card Number',
+				displayName: 'ID Card Number',
 				name: 'personIdCardNumber',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1242,7 +1235,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'State Registration',
 				name: 'personStateRegistration',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1265,7 +1257,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Municipal Registration',
 				name: 'personMunicipalRegistration',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1310,7 +1301,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Person Email',
 				name: 'email',
 				type: 'string',
-				required: false,
+				placeholder: 'name@email.com',
 				default: '',
 				displayOptions: {
 					show: {
@@ -1322,7 +1313,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Site',
 				name: 'personSite',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1334,7 +1324,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Phone',
 				name: 'phone',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1347,7 +1336,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Notes',
 				name: 'notes',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1356,10 +1344,9 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Avatar Id',
+				displayName: 'Avatar ID',
 				name: 'personAvatarId',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1405,7 +1392,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Contact Email',
 				name: 'email',
 				type: 'string',
-				required: false,
+				placeholder: 'name@email.com',
 				default: '',
 				displayOptions: {
 					show: {
@@ -1473,7 +1460,6 @@ export class EKyteAction implements INodeType {
 				name: 'addressNumber',	
 				type: 'number',
 				default: undefined,
-				required: false,
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1506,7 +1492,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Address Email',
 				name: 'email',
 				type: 'string',
-				required: false,
+				placeholder: 'name@email.com',
 				default: '',
 				displayOptions: {
 					show: {
@@ -1515,7 +1501,7 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'City Id',
+				displayName: 'City ID',
 				name: 'addressCityId',
 				type: 'string',
 				default: '',
@@ -1526,7 +1512,7 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'State Id',
+				displayName: 'State ID',
 				name: 'addressStateId',
 				type: 'string',
 				default: '',
