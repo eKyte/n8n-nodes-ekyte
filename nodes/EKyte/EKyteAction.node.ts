@@ -8,6 +8,19 @@ import {
 
 import FormData from 'form-data';
 
+/**
+ * Normalizes a multiOptions parameter value into a comma-separated string.
+ * Handles arrays, comma-separated strings, and single values — safe for AI agent tool usage.
+ */
+function resolveMultiOptions(value: unknown): string {
+	const items = Array.isArray(value)
+		? value.map((s) => String(s).trim())
+		: typeof value === 'string' && value.trim()
+			? value.split(',').map((s) => s.trim())
+			: [];
+	return items.filter(Boolean).join(',');
+}
+
 export class EKyteAction implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'eKyte',
@@ -2125,9 +2138,9 @@ export class EKyteAction implements INodeType {
 						queryParams.Title = filterTitle;
 					}
 
-					const filterSituation = this.getNodeParameter('filterSituation', 0) as string[];
-					if (filterSituation && filterSituation.length > 0) {
-						queryParams.TaskSituation = filterSituation.join(',');
+					const filterSituation = resolveMultiOptions(this.getNodeParameter('filterSituation', 0));
+					if (filterSituation) {
+						queryParams.TaskSituation = filterSituation;
 					}
 
 					const filterWorkspaceId = this.getNodeParameter('filterWorkspaceId', 0) as string;
