@@ -10,15 +10,22 @@ import FormData from 'form-data';
 
 /**
  * Normalizes a multiOptions parameter value into a comma-separated string.
- * Handles arrays, comma-separated strings, and single values — safe for AI agent tool usage.
+ * Handles arrays, comma-separated strings, single values, and stringified arrays
+ * (e.g. "[10, 30]", "['10','30']") — safe for AI agent tool usage.
  */
 function resolveMultiOptions(value: unknown): string {
-	const items = Array.isArray(value)
-		? value.map((s) => String(s).trim())
-		: typeof value === 'string' && value.trim()
-			? value.split(',').map((s) => s.trim())
-			: [];
-	return items.filter(Boolean).join(',');
+	let raw: string[];
+	if (Array.isArray(value)) {
+		raw = value.map((s) => String(s));
+	} else if (typeof value === 'string' && value.trim()) {
+		raw = value.replace(/^\[|\]$/g, '').split(',');
+	} else {
+		return '';
+	}
+	return raw
+		.map((s) => s.trim().replace(/^['"]|['"]$/g, ''))
+		.filter(Boolean)
+		.join(',');
 }
 
 export class EKyteAction implements INodeType {
