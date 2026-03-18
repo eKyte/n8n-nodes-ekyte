@@ -19,6 +19,8 @@ function resolveMultiOptions(value: unknown): string {
 		raw = value.map((s) => String(s));
 	} else if (typeof value === 'string' && value.trim()) {
 		raw = value.replace(/^\[|\]$/g, '').split(',');
+	} else if (typeof value === 'number') {
+		raw = [String(value)];
 	} else {
 		return '';
 	}
