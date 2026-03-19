@@ -238,7 +238,7 @@ export class EKyteAction implements INodeType {
 						action: 'Get many tasks forms with filters',
 					},
 				],
-				default: 'createProject',
+				default: 'getManyTaskForms',
 			},
 			{
 				displayName: 'Operation',
@@ -1883,7 +1883,6 @@ export class EKyteAction implements INodeType {
 				displayName: 'Form Name',
 				name: 'formName',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1892,10 +1891,9 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Form Id',
+				displayName: 'Form ID',
 				name: 'formId',
 				type: 'string',
-				required: false,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1911,48 +1909,48 @@ export class EKyteAction implements INodeType {
 				description: 'The type of the form to retrieve',
 				options: [
 					{
-						"name": "",
-						"value": ""
+						name: '',
+						value: ''
 					},
 					{
-						"name": "Briefing",
-						"value": "10"
+						name: 'Briefing',
+						value: '10'
 					},
 					{
-						"name": "Campaing",
-						"value": "20"
+						name: 'Campaing',
+						value: '20'
 					},
 					{
-						"name": "Display",
-						"value": "30"
+						name: 'Display',
+						value: '30'
 					},
 					{
-						"name": "Search",
-						"value": "40"
+						name: 'Search',
+						value: '40'
 					},
 					{
-						"name": "Carrossel",
-						"value": "50"
+						name: 'Carrossel',
+						value: '50'
 					},
 					{
-						"name": "Stories",
-						"value": "60"
+						name: 'Stories',
+						value: '60'
 					},
 					{
-						"name": "Banner",
-						"value": "70"
+						name: 'Banner',
+						value: '70'
 					},
 					{
-						"name": "Video",
-						"value": "80"
+						name: 'Video',
+						value: '80'
 					},
 					{
-						"name": "Google Discovery",
-						"value": "90"
+						name: 'Google Discovery',
+						value: '90'
 					},
 					{
-						"name": "Album",
-						"value": "100"
+						name: 'Album',
+						value: '100'
 					}
 				],
 				displayOptions: {
