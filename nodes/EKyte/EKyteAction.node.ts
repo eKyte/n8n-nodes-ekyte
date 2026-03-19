@@ -88,6 +88,10 @@ export class EKyteAction implements INodeType {
 						value: 'task',
 					},
 					{
+						name: 'Task Form',
+						value: 'taskForm',
+					},
+					{
 						name: 'Ticket',
 						value: 'ticket',
 					},
@@ -215,6 +219,26 @@ export class EKyteAction implements INodeType {
 					},
 				],
 				default: 'createTask',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['taskForm'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Many (with Filters)',
+						value: 'getManyTaskForms',
+						description: 'Search and filter tasks forms by form type, name or form ID',
+						action: 'Get many tasks forms with filters',
+					},
+				],
+				default: 'createProject',
 			},
 			{
 				displayName: 'Operation',
@@ -416,7 +440,7 @@ export class EKyteAction implements INodeType {
 					'The unique numeric identifier of the task to retrieve. You can find this ID in the task URL or by listing tasks first.',
 				displayOptions: {
 					show: {
-						operation: ['getTask'],
+						operation: ['getTask', 'getManyTaskForms'],
 					},
 				},
 			},
@@ -1854,6 +1878,88 @@ export class EKyteAction implements INodeType {
 						operation: ['createPersonBankData'],
 					},
 				},
+			},
+			{
+				displayName: 'Form Name',
+				name: 'formName',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['getManyTaskForms'],
+					},
+				},
+			},
+			{
+				displayName: 'Form Id',
+				name: 'formId',
+				type: 'string',
+				required: false,
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['getManyTaskForms'],
+					},
+				},
+			},
+			{
+				displayName: 'Form Type',
+				name: 'formType',
+				type: 'options',
+				default: '',
+				description: 'The type of the form to retrieve',
+				options: [
+					{
+						"name": "",
+						"value": ""
+					},
+					{
+						"name": "Briefing",
+						"value": "10"
+					},
+					{
+						"name": "Campaing",
+						"value": "20"
+					},
+					{
+						"name": "Display",
+						"value": "30"
+					},
+					{
+						"name": "Search",
+						"value": "40"
+					},
+					{
+						"name": "Carrossel",
+						"value": "50"
+					},
+					{
+						"name": "Stories",
+						"value": "60"
+					},
+					{
+						"name": "Banner",
+						"value": "70"
+					},
+					{
+						"name": "Video",
+						"value": "80"
+					},
+					{
+						"name": "Google Discovery",
+						"value": "90"
+					},
+					{
+						"name": "Album",
+						"value": "100"
+					}
+				],
+				displayOptions: {
+					show: {
+						operation: ['getManyTaskForms'],
+					},
+				},
 			}
 		],
 	};
@@ -2724,6 +2830,64 @@ export class EKyteAction implements INodeType {
 					];
 					registerTimestamp();
 					return [returnData];
+				
+				case 'getManyTaskForms':
+					endpoint = `${baseUrl}/polling/task-forms`;
+					const queryTaskFormParams: Record<string, string> = {};
+
+					const filterTaskId = this.getNodeParameter('taskId', 0) as string;
+					const filterFormName = this.getNodeParameter('formName', 0) as string;
+					const filterTaskFormId = this.getNodeParameter('formId', 0) as string;
+					const filterFormType = this.getNodeParameter('formType', 0) as string;
+					
+					queryTaskFormParams.CtcTaskId = filterTaskId
+					
+					if (filterFormName) {
+						queryTaskFormParams.FormName = filterFormName;
+					}
+
+					if (filterTaskFormId) {
+						queryTaskFormParams.FormId = filterTaskFormId;
+					}
+
+					if (filterFormType) {
+						queryTaskFormParams.FormType = filterFormType;
+					}
+
+					result = await this.helpers.httpRequestWithAuthentication.call(this, 'eKyteApi', {
+						method: 'GET',
+						url: endpoint,
+						qs: queryTaskFormParams,
+						returnFullResponse: true,
+						ignoreHttpStatusErrors: true,
+					});
+					if (result.statusCode && result.statusCode >= 400) {
+						let errorMessage = `Error executing operation ${operation}`;
+						try {
+							const errorBody =
+								typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+							if (errorBody && errorBody.text) {
+								errorMessage = errorBody.id
+									? `[Error ${errorBody.id}] ${errorBody.text}`
+									: errorBody.text;
+							} else if (errorBody && errorBody.message) {
+								errorMessage = errorBody.message;
+							}
+						} catch (parseError) {
+							errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
+						}
+						throw new NodeOperationError(this.getNode(), errorMessage);
+					}
+					const taskForms = typeof result.body === 'string' ? JSON.parse(result.body) : result.body;
+					returnData = [
+						{
+							json: taskForms,
+							pairedItem: { item: 0 },
+						},
+					];
+					registerTimestamp();
+					return [returnData];
+				
 
 				default:
 					throw new NodeOperationError(this.getNode(), `Operation ${operation} not supported`);
