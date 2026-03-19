@@ -1913,6 +1913,14 @@ export class EKyteAction implements INodeType {
 						value: ''
 					},
 					{
+						name: 'Album',
+						value: '100'
+					},
+					{
+						name: 'Banner',
+						value: '70'
+					},
+					{
 						name: 'Briefing',
 						value: '10'
 					},
@@ -1921,36 +1929,28 @@ export class EKyteAction implements INodeType {
 						value: '20'
 					},
 					{
-						name: 'Display',
-						value: '30'
-					},
-					{
-						name: 'Search',
-						value: '40'
-					},
-					{
 						name: 'Carrossel',
 						value: '50'
 					},
 					{
-						name: 'Stories',
-						value: '60'
-					},
-					{
-						name: 'Banner',
-						value: '70'
-					},
-					{
-						name: 'Video',
-						value: '80'
+						name: 'Display',
+						value: '30'
 					},
 					{
 						name: 'Google Discovery',
 						value: '90'
 					},
 					{
-						name: 'Album',
-						value: '100'
+						name: 'Search',
+						value: '40'
+					},
+					{
+						name: 'Stories',
+						value: '60'
+					},
+					{
+						name: 'Video',
+						value: '80'
 					}
 				],
 				displayOptions: {
