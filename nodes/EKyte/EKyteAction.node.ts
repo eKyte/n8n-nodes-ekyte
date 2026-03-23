@@ -76,7 +76,7 @@ export class EKyteAction implements INodeType {
 						value: 'notifications',
 					},
 					{
-						name: 'PI',
+						name: 'Insertion Order',
 						value: 'PI',
 					},
 					{
@@ -234,8 +234,8 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Get Many (with Filters)',
 						value: 'getManyTaskForms',
-						description: 'Search and filter tasks forms by form type, name or form ID',
-						action: 'Get many tasks forms with filters',
+						description: 'Search and filter task forms by form type, name, or form ID',
+						action: 'Get many task forms with filters',
 					},
 				],
 				default: 'getManyTaskForms',
@@ -338,10 +338,10 @@ export class EKyteAction implements INodeType {
 				},
 				options: [
 					{
-						name: 'Add',
+						name: 'Create',
 						value: 'addArtifact',
-						description: 'Add a new artifact to be attached on ticket',
-						action: 'Add artifact',
+						description: 'Create a new artifact to be attached to a ticket',
+						action: 'Create artifact',
 					},
 				],
 				default: 'addArtifact',
@@ -358,27 +358,27 @@ export class EKyteAction implements INodeType {
 				},
 				options: [
 					{
-						name: 'Create Person',
+						name: 'Create',
 						value: 'createPerson',
-						description: 'Create a person record',
-						action: 'Create person',
+						description: 'Create an insertion order person record',
+						action: 'Create insertion order person',
 					},
 					{
-						name: 'Create Person Address',
+						name: 'Create Address',
 						value: 'createPersonAddress',
-						description: 'Create a person address record',
+						description: 'Create an address record for a person',
 						action: 'Create person address',
 					},
 					{
-						name: 'Create Person Bank Data',
+						name: 'Create Bank Data',
 						value: 'createPersonBankData',
-						description: 'Create a person bank data record',
+						description: 'Create a bank data record for a person',
 						action: 'Create person bank data',
 					},
 					{
-						name: 'Create Person Contact',
+						name: 'Create Contact',
 						value: 'createPersonContact',
-						description: 'Create a person contact record',
+						description: 'Create a contact record for a person',
 						action: 'Create person contact',
 					},
 					{
@@ -390,8 +390,8 @@ export class EKyteAction implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getManyPersons',
-						description: 'Retrieve a person by filter',
-						action: 'Get many persons with filters',
+						description: 'Retrieve persons by filter',
+						action: 'Get many persons',
 					},
 				],
 				default: 'getPerson',
@@ -882,6 +882,7 @@ export class EKyteAction implements INodeType {
 				name: 'sourceProjectId',
 				type: 'number',
 				default: 0,
+				description: 'The ID of an existing project to use as a template for the new project',
 				displayOptions: {
 					show: {
 						operation: ['createProject'],
@@ -932,7 +933,7 @@ export class EKyteAction implements INodeType {
 						description: 'Pricing or proposal request',
 					},
 					{
-						name: 'Enhancement',
+						name: 'Improvement',
 						value: '5',
 						description: 'Feature improvement suggestion',
 					},
@@ -1068,7 +1069,7 @@ export class EKyteAction implements INodeType {
 				type: 'multiOptions',
 				default: [],
 				description:
-					'Filter tickets by their type. Select one or more types: Request, Question, Bug Fix, Quote, Enhancement. Multiple selections are combined with OR logic.',
+					'Filter tickets by their type. Select one or more types: Request, Question, Bug Fix, Quote, Improvement. Multiple selections are combined with OR logic.',
 				options: [
 					{
 						name: 'Request',
@@ -1081,12 +1082,12 @@ export class EKyteAction implements INodeType {
 						description: 'Inquiry or clarification needed',
 					},
 					{
-						name: 'Bug',
+						name: 'Bug Fix',
 						value: '3',
 						description: 'Defect or error report',
 					},
 					{
-						name: 'Quotation',
+						name: 'Quote',
 						value: '4',
 						description: 'Pricing or proposal request',
 					},
@@ -1108,27 +1109,27 @@ export class EKyteAction implements INodeType {
 				type: 'multiOptions',
 				default: [],
 				description:
-					'Filter tasks by their current status. Select one or more situations: Active (in progress), Pause (temporarily stopped), Concluded (completed), Canceled (cancelled). Multiple selections are combined with OR logic.',
+					'Filter tickets by their current status. Select one or more statuses: Processing (in progress), Awaiting Requester (waiting for response), Resolved (completed), Canceled (cancelled). Multiple selections are combined with OR logic.',
 				options: [
 					{
 						name: 'Processing',
 						value: '1',
-						description: 'Tasks currently in progress',
+						description: 'Tickets currently in progress',
 					},
 					{
-						name: 'AwaitingRequester',
+						name: 'Awaiting Requester',
 						value: '2',
-						description: 'Tasks awaiting requester response',
+						description: 'Tickets awaiting requester response',
 					},
 					{
 						name: 'Resolved',
 						value: '3',
-						description: 'Tasks that have been completed',
+						description: 'Tickets that have been completed',
 					},
 					{
 						name: 'Canceled',
 						value: '9',
-						description: 'Tasks that were cancelled',
+						description: 'Tickets that were cancelled',
 					},
 				],
 				displayOptions: {
@@ -1308,7 +1309,7 @@ export class EKyteAction implements INodeType {
 				name: 'fileBinary',
 				type: 'string',
 				default: '',
-				description: 'File to be attached on ticket',
+				description: 'File to be attached to a ticket',
 				displayOptions: {
 					show: {
 						operation: ['addArtifact'],
@@ -1319,8 +1320,8 @@ export class EKyteAction implements INodeType {
 				displayName: 'Artifact IDs',
 				name: 'artifactIds',
 				type: 'collection',
-				placeholder: 'Adicionar IDs',
-				description: 'Lista de IDs numéricos de artefatos',
+				placeholder: 'Add IDs',
+				description: 'List of numeric artifact IDs',
 				displayOptions: {
 					show: {
 						operation: ['createTask', 'createTicket'],
@@ -1333,6 +1334,7 @@ export class EKyteAction implements INodeType {
 						name: 'ids',
 						type: 'number',
 						default: 0,
+						description: 'The numeric IDs of the artifacts to attach',
 						typeOptions: {
 							multipleValues: true,
 						},
@@ -1372,15 +1374,15 @@ export class EKyteAction implements INodeType {
 				description: 'The type of the person',
 				options: [
 					{
-						name: '',
+						name: 'Any',
 						value: '',
 					},
 					{
-						name: 'PF',
+						name: 'Individual',
 						value: '10',
 					},
 					{
-						name: 'PJ',
+						name: 'Legal Entity',
 						value: '20',
 					}
 				],
@@ -1398,7 +1400,7 @@ export class EKyteAction implements INodeType {
 				description: 'The profile of the person to retrieve',
 				options: [
 					{
-						name: '',
+						name: 'Any',
 						value: ''
 					},
 					{
@@ -1426,6 +1428,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The unique identifier of the person to associate this record with',
 				displayOptions: {
 					show: {
 						operation: ['createPersonContact', 'createPersonAddress', 'createPersonBankData'],
@@ -1438,6 +1441,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				required: true,
 				default: '',
+				description: 'The full name of the person or contact',
 				displayOptions: {
 					show: {
 						operation: ['createPerson', 'createPersonContact'],
@@ -1449,6 +1453,7 @@ export class EKyteAction implements INodeType {
 				name: 'personAlias',
 				type: 'string',
 				default: '',
+				description: 'A short name or nickname for the person',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1460,6 +1465,7 @@ export class EKyteAction implements INodeType {
 				name: 'personBornAt',
 				type: 'dateTime',
 				default: '',
+				description: 'The date of birth of the person in ISO 8601 format',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1487,11 +1493,11 @@ export class EKyteAction implements INodeType {
 				description: 'The type of the person',
 				options: [
 					{
-						name: 'PF',
+						name: 'Individual',
 						value: '10',
 					},
 					{
-						name: 'PJ',
+						name: 'Legal Entity',
 						value: '20',
 					}
 				],
@@ -1506,6 +1512,7 @@ export class EKyteAction implements INodeType {
 				name: 'personIdCardNumber',
 				type: 'string',
 				default: '',
+				description: 'The identity card number (RG) of the person',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1517,6 +1524,7 @@ export class EKyteAction implements INodeType {
 				name: 'personStateRegistration',
 				type: 'string',
 				default: '',
+				description: 'The state registration number (Inscrição Estadual) for legal entities',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1528,6 +1536,7 @@ export class EKyteAction implements INodeType {
 				name: 'personStateRegistrationOptional',
 				type: 'boolean',
 				default: false,
+				description: 'Whether the state registration is optional for this person',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1539,6 +1548,7 @@ export class EKyteAction implements INodeType {
 				name: 'personMunicipalRegistration',
 				type: 'string',
 				default: '',
+				description: 'The municipal registration number (Inscrição Municipal) for legal entities',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1550,6 +1560,7 @@ export class EKyteAction implements INodeType {
 				name: 'personIsVehicle',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this person is classified as a media vehicle',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1561,6 +1572,7 @@ export class EKyteAction implements INodeType {
 				name: 'personIsSupplier',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this person is classified as a supplier',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1572,6 +1584,7 @@ export class EKyteAction implements INodeType {
 				name: 'personIsCustomer',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this person is classified as a customer',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1584,6 +1597,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				placeholder: 'name@email.com',
 				default: '',
+				description: 'The primary email address of the person',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1595,6 +1609,7 @@ export class EKyteAction implements INodeType {
 				name: 'personSite',
 				type: 'string',
 				default: '',
+				description: 'The website URL of the person or company',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1606,6 +1621,7 @@ export class EKyteAction implements INodeType {
 				name: 'phone',
 				type: 'string',
 				default: '',
+				description: 'The phone number with country code (e.g., +5511999999999)',
 				displayOptions: {
 					show: {
 						operation: ['createPerson', 'createPersonContact', 'createPersonAddress'],
@@ -1617,6 +1633,7 @@ export class EKyteAction implements INodeType {
 				name: 'notes',
 				type: 'string',
 				default: '',
+				description: 'Additional notes or observations about this record',
 				displayOptions: {
 					show: {
 						operation: ['createPerson', 'createPersonAddress'],
@@ -1628,6 +1645,7 @@ export class EKyteAction implements INodeType {
 				name: 'personAvatarId',
 				type: 'string',
 				default: '',
+				description: 'The ID of the avatar image to associate with this person',
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
@@ -1639,6 +1657,7 @@ export class EKyteAction implements INodeType {
 				name: 'tagIds',
 				type: 'collection',
 				placeholder: 'Add Tag IDs',
+				description: 'List of tag IDs to associate with the person or contact',
 				displayOptions: {
 					show: {
 						operation: ['createPerson', 'createPersonContact'],
@@ -1651,6 +1670,7 @@ export class EKyteAction implements INodeType {
 						name: 'ids',
 						type: 'number',
 						default: 0,
+						description: 'The numeric IDs of the tags to associate',
 						typeOptions: {
 							multipleValues: true,
 						},
@@ -1662,6 +1682,7 @@ export class EKyteAction implements INodeType {
 				name: 'isMain',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this is the primary record for the person',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress', 'createPersonBankData'],
@@ -1674,6 +1695,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				placeholder: 'name@email.com',
 				default: '',
+				description: 'The email address of the contact',
 				displayOptions: {
 					show: {
 						operation: ['createPersonContact'],
@@ -1685,6 +1707,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressIsCharge',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this address is used for billing purposes',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1696,6 +1719,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressIsCorrespondence',
 				type: 'boolean',
 				default: false,
+				description: 'Whether this address is used for correspondence',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1707,6 +1731,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressZipCode',
 				type: 'string',
 				default: '',
+				description: 'The postal/zip code of the address',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1718,6 +1743,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressDescription',
 				type: 'string',
 				default: '',
+				description: 'The street name and address line',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1729,6 +1755,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressDistrict',
 				type: 'string',
 				default: '',
+				description: 'The neighborhood or district of the address',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1737,9 +1764,10 @@ export class EKyteAction implements INodeType {
 			},
 			{
 				displayName: 'Number',
-				name: 'addressNumber',	
+				name: 'addressNumber',
 				type: 'number',
 				default: undefined,
+				description: 'The street number of the address',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1751,6 +1779,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressNoNumber',
 				type: 'boolean',
 				default: false,
+				description: 'Whether the address has no street number',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1762,6 +1791,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressComplement',
 				type: 'string',
 				default: '',
+				description: 'Additional address details such as apartment, suite, or floor number',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1774,6 +1804,7 @@ export class EKyteAction implements INodeType {
 				type: 'string',
 				placeholder: 'name@email.com',
 				default: '',
+				description: 'The email address associated with this address',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1785,6 +1816,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressCityId',
 				type: 'string',
 				default: '',
+				description: 'The unique identifier of the city',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1796,6 +1828,7 @@ export class EKyteAction implements INodeType {
 				name: 'addressStateId',
 				type: 'string',
 				default: '',
+				description: 'The unique identifier of the state',
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1807,6 +1840,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankName',
 				type: 'string',
 				default: '',
+				description: 'The name of the bank institution',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1818,6 +1852,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankAccountType',
 				type: 'string',
 				default: '',
+				description: 'The type of the bank account (e.g., checking, savings)',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1829,6 +1864,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankAgency',
 				type: 'string',
 				default: '',
+				description: 'The bank branch/agency number',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1840,6 +1876,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankAccountNumber',
 				type: 'string',
 				default: '',
+				description: 'The bank account number',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1851,6 +1888,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankNotes',
 				type: 'string',
 				default: '',
+				description: 'Additional notes about the bank account',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1862,6 +1900,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankPixKey',
 				type: 'string',
 				default: '',
+				description: 'The Pix key for instant payments (CPF, email, phone, or random key)',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1873,6 +1912,7 @@ export class EKyteAction implements INodeType {
 				name: 'bankPixDescription',
 				type: 'string',
 				default: '',
+				description: 'A description or label for the Pix key',
 				displayOptions: {
 					show: {
 						operation: ['createPersonBankData'],
@@ -1884,6 +1924,7 @@ export class EKyteAction implements INodeType {
 				name: 'formName',
 				type: 'string',
 				default: '',
+				description: 'Filter task forms by name (partial match)',
 				displayOptions: {
 					show: {
 						operation: ['getManyTaskForms'],
@@ -1895,6 +1936,7 @@ export class EKyteAction implements INodeType {
 				name: 'formId',
 				type: 'string',
 				default: '',
+				description: 'Filter by specific form ID',
 				displayOptions: {
 					show: {
 						operation: ['getManyTaskForms'],
@@ -1909,7 +1951,7 @@ export class EKyteAction implements INodeType {
 				description: 'The type of the form to retrieve',
 				options: [
 					{
-						name: '',
+						name: 'Any',
 						value: ''
 					},
 					{
@@ -1925,11 +1967,11 @@ export class EKyteAction implements INodeType {
 						value: '10'
 					},
 					{
-						name: 'Campaing',
+						name: 'Campaign',
 						value: '20'
 					},
 					{
-						name: 'Carrossel',
+						name: 'Carousel',
 						value: '50'
 					},
 					{
