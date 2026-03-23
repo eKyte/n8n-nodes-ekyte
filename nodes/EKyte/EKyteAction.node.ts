@@ -68,16 +68,16 @@ export class EKyteAction implements INodeType {
 						value: 'board',
 					},
 					{
+						name: 'Insertion Order',
+						value: 'PI',
+					},
+					{
 						name: 'Note',
 						value: 'note',
 					},
 					{
 						name: 'Notification',
 						value: 'notifications',
-					},
-					{
-						name: 'Insertion Order',
-						value: 'PI',
 					},
 					{
 						name: 'Project',
@@ -1951,12 +1951,12 @@ export class EKyteAction implements INodeType {
 				description: 'The type of the form to retrieve',
 				options: [
 					{
-						name: 'Any',
-						value: ''
-					},
-					{
 						name: 'Album',
 						value: '100'
+					},
+					{
+						name: 'Any',
+						value: ''
 					},
 					{
 						name: 'Banner',
