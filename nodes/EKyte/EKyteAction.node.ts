@@ -1433,10 +1433,9 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Name',
-				name: 'name',
+				displayName: 'Avatar ID',
+				name: 'personAvatarId',
 				type: 'string',
-				required: true,
 				default: '',
 				displayOptions: {
 					show: {
@@ -1445,36 +1444,14 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Alias',
-				name: 'personAlias',
+				displayName: 'Name',
+				name: 'name',
 				type: 'string',
+				required: true,
 				default: '',
 				displayOptions: {
 					show: {
-						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Born At',
-				name: 'personBornAt',
-				type: 'dateTime',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Person Document',
-				name: 'personDocument',
-				type: 'string',
-				default: '',
-				description: 'The document of the person',
-				displayOptions: {
-					show: {
-						operation: ['getManyPersons', 'createPerson'],
+						operation: ['createPerson', 'createPersonContact'],
 					},
 				},
 			},
@@ -1502,6 +1479,18 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
+				displayName: 'Person Document',
+				name: 'personDocument',
+				type: 'string',
+				default: '',
+				description: 'The document of the person',
+				displayOptions: {
+					show: {
+						operation: ['getManyPersons', 'createPerson'],
+					},
+				},
+			},
+			{
 				displayName: 'ID Card Number',
 				name: 'personIdCardNumber',
 				type: 'string',
@@ -1513,9 +1502,20 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'State Registration',
-				name: 'personStateRegistration',
+				displayName: 'Alias',
+				name: 'personAlias',
 				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
+				displayName: 'Born At',
+				name: 'personBornAt',
+				type: 'dateTime',
 				default: '',
 				displayOptions: {
 					show: {
@@ -1535,6 +1535,17 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
+				displayName: 'State Registration',
+				name: 'personStateRegistration',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson'],
+					},
+				},
+			},
+			{
 				displayName: 'Municipal Registration',
 				name: 'personMunicipalRegistration',
 				type: 'string',
@@ -1546,8 +1557,8 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Vehicle',
-				name: 'personIsVehicle',
+				displayName: 'Customer',
+				name: 'personIsCustomer',
 				type: 'boolean',
 				default: false,
 				displayOptions: {
@@ -1568,103 +1579,13 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Customer',
-				name: 'personIsCustomer',
+				displayName: 'Vehicle',
+				name: 'personIsVehicle',
 				type: 'boolean',
 				default: false,
 				displayOptions: {
 					show: {
 						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Person Email',
-				name: 'email',
-				type: 'string',
-				placeholder: 'name@email.com',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Site',
-				name: 'personSite',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Phone',
-				name: 'phone',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson', 'createPersonContact', 'createPersonAddress'],
-					},
-				},
-			},
-			{
-				displayName: 'Notes',
-				name: 'notes',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson', 'createPersonAddress'],
-					},
-				},
-			},
-			{
-				displayName: 'Avatar ID',
-				name: 'personAvatarId',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPerson'],
-					},
-				},
-			},
-			{
-				displayName: 'Tag IDs',
-				name: 'tagIds',
-				type: 'collection',
-				placeholder: 'Add Tag IDs',
-				displayOptions: {
-					show: {
-						operation: ['createPerson', 'createPersonContact'],
-					},
-				},
-				default: null,
-				options: [
-					{
-						displayName: 'IDs',
-						name: 'ids',
-						type: 'number',
-						default: 0,
-						typeOptions: {
-							multipleValues: true,
-						},
-					},
-				],
-			},
-			{
-				displayName: 'Is Main',
-				name: 'isMain',
-				type: 'boolean',
-				default: false,
-				displayOptions: {
-					show: {
-						operation: ['createPersonAddress', 'createPersonBankData'],
 					},
 				},
 			},
@@ -1681,24 +1602,79 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Is Charge',
-				name: 'addressIsCharge',
-				type: 'boolean',
-				default: false,
+				displayName: 'Phone',
+				name: 'phone',
+				type: 'string',
+				default: '',
 				displayOptions: {
 					show: {
-						operation: ['createPersonAddress'],
+						operation: ['createPersonContact'],
 					},
 				},
 			},
 			{
-				displayName: 'Is Correspondence',
-				name: 'addressIsCorrespondence',
-				type: 'boolean',
-				default: false,
+				displayName: 'Site',
+				name: 'contactSite',
+				type: 'string',
+				default: '',
 				displayOptions: {
 					show: {
-						operation: ['createPersonAddress'],
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Linkedin',
+				name: 'contactLinkedin',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Instagram',
+				name: 'contactInstagram',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Facebook',
+				name: 'contactFacebook',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Tiktok',
+				name: 'contactTiktok',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Youtube',
+				name: 'contactYoutube',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonContact'],
 					},
 				},
 			},
@@ -1715,18 +1691,7 @@ export class EKyteAction implements INodeType {
 			},
 			{
 				displayName: 'Address',
-				name: 'addressDescription',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPersonAddress'],
-					},
-				},
-			},
-			{
-				displayName: 'District',
-				name: 'addressDistrict',
+				name: 'address',
 				type: 'string',
 				default: '',
 				displayOptions: {
@@ -1769,10 +1734,20 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Address Email',
-				name: 'email',
+				displayName: 'District',
+				name: 'addressDistrict',
 				type: 'string',
-				placeholder: 'name@email.com',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'State ID',
+				name: 'addressStateId',
+				type: 'string',
 				default: '',
 				displayOptions: {
 					show: {
@@ -1792,10 +1767,21 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'State ID',
-				name: 'addressStateId',
-				type: 'string',
-				default: '',
+				displayName: 'Is Correspondence',
+				name: 'addressIsCorrespondence',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress'],
+					},
+				},
+			},
+			{
+				displayName: 'Is Charge',
+				name: 'addressIsCharge',
+				type: 'boolean',
+				default: false,
 				displayOptions: {
 					show: {
 						operation: ['createPersonAddress'],
@@ -1847,17 +1833,6 @@ export class EKyteAction implements INodeType {
 				},
 			},
 			{
-				displayName: 'Bank Notes',
-				name: 'bankNotes',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['createPersonBankData'],
-					},
-				},
-			},
-			{
 				displayName: 'Pix Key',
 				name: 'bankPixKey',
 				type: 'string',
@@ -1878,6 +1853,51 @@ export class EKyteAction implements INodeType {
 						operation: ['createPersonBankData'],
 					},
 				},
+			},
+			{
+				displayName: 'Is Main',
+				name: 'isMain',
+				type: 'boolean',
+				default: false,
+				displayOptions: {
+					show: {
+						operation: ['createPersonAddress', 'createPersonBankData', 'createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Notes',
+				name: 'notes',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonAddress','createPersonContact'],
+					},
+				},
+			},
+			{
+				displayName: 'Tag IDs',
+				name: 'tagIds',
+				type: 'collection',
+				placeholder: 'Add Tag IDs',
+				displayOptions: {
+					show: {
+						operation: ['createPerson', 'createPersonContact'],
+					},
+				},
+				default: null,
+				options: [
+					{
+						displayName: 'IDs',
+						name: 'ids',
+						type: 'number',
+						default: 0,
+						typeOptions: {
+							multipleValues: true,
+						},
+					},
+				],
 			},
 			{
 				displayName: 'Form Name',
@@ -2157,9 +2177,6 @@ export class EKyteAction implements INodeType {
 						IsVehicle: this.getNodeParameter('personIsVehicle', 0) as boolean,
 						IsSupplier: this.getNodeParameter('personIsSupplier', 0) as boolean,
 						IsCustomer: this.getNodeParameter('personIsCustomer', 0) as boolean,
-						Email: this.getNodeParameter('email', 0) as string,
-						Site: this.getNodeParameter('personSite', 0) as string,
-						Phone: this.getNodeParameter('phone', 0) as string,
 						Notes: this.getNodeParameter('notes', 0) as string,
 						AvatarId: this.getNodeParameter('personAvatarId', 0) as string,
 						Tags: tagsFormatted
@@ -2172,7 +2189,7 @@ export class EKyteAction implements INodeType {
 
 					const contactTagCollection = this.getNodeParameter('tagIds', 0) as { ids: number[] };
 					const contactTagIds = contactTagCollection?.ids ?? [];
-					 const contactTagsFormatted = contactTagIds.map(id => ({
+					const contactTagsFormatted = contactTagIds.map(id => ({
 						Id: id.toString(),
 					}));
 
@@ -2182,6 +2199,15 @@ export class EKyteAction implements INodeType {
 						Name: this.getNodeParameter('name', 0) as string,
 						Email: this.getNodeParameter('email', 0) as string,
 						Phone: this.getNodeParameter('phone', 0) as string,
+						Site: this.getNodeParameter('contactSite', 0) as string,
+						Linkedin: this.getNodeParameter('contactLinkedin', 0) as string,
+						Instagram: this.getNodeParameter('contactInstagram', 0) as string,
+						Facebook: this.getNodeParameter('contactFacebook', 0) as string,
+						Tiktok: this.getNodeParameter('contactTiktok', 0) as string,
+						Youtube: this.getNodeParameter('contactYoutube', 0) as string,
+						AvatarId: this.getNodeParameter('personAvatarId', 0) as string,
+						IsMain: this.getNodeParameter('isMain', 0) as boolean,
+						Notes: this.getNodeParameter('notes', 0) as string,
 						Tags: contactTagsFormatted
 					};
 					break;
@@ -2198,14 +2224,12 @@ export class EKyteAction implements INodeType {
 						IsMain: this.getNodeParameter('isMain', 0) as boolean,
 						IsCharge: this.getNodeParameter('addressIsCharge', 0) as boolean,
 						IsCorrespondence: this.getNodeParameter('addressIsCorrespondence', 0) as boolean,
-						Name: this.getNodeParameter('addressDescription', 0) as string,
+						Address: this.getNodeParameter('address', 0) as string,
 						ZipCode: this.getNodeParameter('addressZipCode', 0) as string,
 						...(addressNumber && { Number: addressNumber }),
 						District: this.getNodeParameter('addressDistrict', 0) as string,
 						NoNumber: this.getNodeParameter('addressNoNumber', 0) as boolean,
 						Complement: this.getNodeParameter('addressComplement', 0) as string,
-						Email: this.getNodeParameter('email', 0) as string,
-						Phone: this.getNodeParameter('phone', 0) as string,
 						Notes: this.getNodeParameter('notes', 0) as string,
 						CityId: this.getNodeParameter('addressCityId', 0) as string,
 						StateId: this.getNodeParameter('addressStateId', 0) as string,
@@ -2223,7 +2247,6 @@ export class EKyteAction implements INodeType {
 						AccountType: this.getNodeParameter('bankAccountType', 0) as string,
 						BankAgency: this.getNodeParameter('bankAgency', 0) as string,
 						AccountNumber: this.getNodeParameter('bankAccountNumber', 0) as string,
-						BankNotes: this.getNodeParameter('bankNotes', 0) as string,
 						PixKey: this.getNodeParameter('bankPixKey', 0) as string,
 						PixDescription: this.getNodeParameter('bankPixDescription', 0) as string,
 						IsMain: this.getNodeParameter('isMain', 0) as boolean,
