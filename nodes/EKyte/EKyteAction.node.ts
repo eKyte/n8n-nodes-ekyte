@@ -1645,7 +1645,7 @@ export class EKyteAction implements INodeType {
 				name: 'contactLinkedin',
 				type: 'string',
 				default: '',
-				description: 'The Linkedin URL of contact',				
+				description: 'The Linkedin URL of contact',
 				displayOptions: {
 					show: {
 						operation: ['createPersonContact'],
@@ -2653,7 +2653,7 @@ export class EKyteAction implements INodeType {
 
 					const filterStatus = resolveMultiOptions(this.getNodeParameter('filterStatus', 0));
 					if (filterStatus) {
-						queryParams.TaskSituation = filterStatus;
+						queryParams.filterStatus = filterStatus;
 					}
 
 					const filterTicketType = resolveMultiOptions(
@@ -2701,7 +2701,7 @@ export class EKyteAction implements INodeType {
 						returnFullResponse: true,
 						ignoreHttpStatusErrors: true,
 					});
-					
+
 					//Check for errors
 					if (result.statusCode && result.statusCode >= 400) {
 						let errorMessage = `Error executing operation ${operation}`;
@@ -2895,7 +2895,7 @@ export class EKyteAction implements INodeType {
 					];
 					registerTimestamp();
 					return [returnData];
-				
+
 				case 'getManyTaskForms':
 					endpoint = `${baseUrl}/polling/task-forms`;
 					const queryTaskFormParams: Record<string, string> = {};
@@ -2904,9 +2904,9 @@ export class EKyteAction implements INodeType {
 					const filterFormName = this.getNodeParameter('formName', 0) as string;
 					const filterTaskFormId = this.getNodeParameter('formId', 0) as string;
 					const filterFormType = this.getNodeParameter('formType', 0) as string;
-					
+
 					queryTaskFormParams.CtcTaskId = filterTaskId
-					
+
 					if (filterFormName) {
 						queryTaskFormParams.FormName = filterFormName;
 					}
