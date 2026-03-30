@@ -57,6 +57,7 @@ Bitbucket Pipelines with two branches:
 - Indentation: tabs (2-width)
 - Single quotes, trailing commas, semicolons required
 - ESLint enforces n8n-nodes-base plugin rules (class naming, parameter descriptions, icon format, etc.)
+- ESLint requires alphabetical ordering of resource options and form type options
 - Commit messages use Brazilian Portuguese task IDs: `Tarefa XXXXX - description`
 
 ## n8n Node Development Guidelines

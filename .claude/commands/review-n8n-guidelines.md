@@ -54,6 +54,7 @@ Verifique TODOS os blocos de operation `{ name, value, action, description }` no
 - Options com `name: ''` (anti-pattern) — devem ter label descritivo
 - Verifique consistencia entre options do mesmo tipo (ex: se um filtro usa 'Any', todos devem)
 - Verifique erros gramaticais em descriptions em ingles
+- **ESLint: opcoes de resource e form type devem estar em ordem alfabetica** — verifique se as opcoes dos campos `resource` e `formType` estao ordenadas alfabeticamente pelo campo `name`
 
 ---
 
