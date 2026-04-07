@@ -400,7 +400,7 @@ export class EKyteAction implements INodeType {
 				displayName: 'Base URL',
 				name: 'baseUrl',
 				type: 'hidden',
-				default: 'https://apistaging.ekyte.com/n8n',
+				default: 'https://api.ekyte.com/n8n',
 				description: 'The base URL for eKyte API',
 			},
 			{
@@ -2952,7 +2952,7 @@ export class EKyteAction implements INodeType {
 					];
 					registerTimestamp();
 					return [returnData];
-				
+
 
 				default:
 					throw new NodeOperationError(this.getNode(), `Operation ${operation} not supported`);

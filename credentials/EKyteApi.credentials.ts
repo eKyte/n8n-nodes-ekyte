@@ -43,7 +43,7 @@ export class EKyteApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://apistaging.ekyte.com/n8n',
+			baseURL: 'https://api.ekyte.com/n8n',
 			url: '/polling/auth',
 			method: 'GET',
 		},
