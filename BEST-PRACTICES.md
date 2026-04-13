@@ -10,14 +10,22 @@ Todos os textos visíveis ao usuário no node **devem ser em inglês**, independ
 
 Isso inclui: `displayName`, `description`, `placeholder`, `name` (dentro de options).
 
+**Importante:** Não inclua traduções ou termos em português entre parênteses. Isso também é reprovado na revisão.
+
 ```typescript
 // Correto
 displayName: 'Start Date',
 description: 'The date when work on this task should begin',
 
-// Errado
+// Correto
+description: 'State registration number for legal entities',
+
+// Errado — texto em português
 displayName: 'Data de Início',
 description: 'A data de início da tarefa',
+
+// Errado — tradução entre parênteses
+description: 'The state registration number (Inscrição Estadual) for legal entities',
 ```
 
 ### Termos do domínio
@@ -140,28 +148,122 @@ this.helpers.request(requestOptions)
 
 ## 6. Tratamento de Erros
 
-Toda chamada de API deve estar dentro de `try-catch`, extraindo a mensagem de erro do body da resposta:
+### NodeApiError vs NodeOperationError — Quando usar cada um?
+
+O n8n tem dois tipos de erro. Usar o tipo errado faz com que o painel de erros do n8n perca informações importantes.
+
+| Tipo | Quando usar | O que acontece no n8n |
+|------|------------|----------------------|
+| `NodeApiError` | Erro vindo de uma chamada HTTP (API retornou 400, 404, 500, etc.) | Mostra o status code HTTP + mensagem no painel de erros |
+| `NodeOperationError` | Erro de lógica/validação (operação não suportada, parâmetro inválido) | Mostra apenas a mensagem de texto |
+
+> **Regra simples:** Se o erro veio de uma chamada HTTP → `NodeApiError`. Se não → `NodeOperationError`.
+
+### Exemplo: Erro HTTP (chamada de API que falhou)
 
 ```typescript
-try {
-  result = await this.helpers.httpRequestWithAuthentication('eKyteApi', { ... });
-
-  if (result.statusCode && result.statusCode >= 400) {
+// Correto — usa NodeApiError, preserva status code
+if (result.statusCode && result.statusCode >= 400) {
+  let errorMessage = `Error executing operation ${operation}`;
+  try {
     const errorBody = typeof result.body === 'string'
       ? JSON.parse(result.body) : result.body;
-    throw new NodeOperationError(this.getNode(),
-      errorBody?.text || errorBody?.message || 'Request failed');
+    if (errorBody && errorBody.text) {
+      errorMessage = errorBody.id
+        ? `[Error ${errorBody.id}] ${errorBody.text}`
+        : errorBody.text;
+    } else if (errorBody && errorBody.message) {
+      errorMessage = errorBody.message;
+    }
+  } catch (parseError) {
+    errorMessage = `Error ${result.statusCode}: ${result.statusMessage || 'Request failed'}`;
   }
-} catch (error) {
-  if (error instanceof NodeOperationError) throw error;
-  throw new NodeOperationError(this.getNode(),
-    `Error executing operation: ${error.message}`);
+  throw new NodeApiError(this.getNode(), {
+    message: errorMessage,
+    statusCode: result.statusCode,
+  } as JsonObject, {
+    message: errorMessage,
+    httpCode: String(result.statusCode),
+  });
 }
+```
+
+```typescript
+// Errado — usa NodeOperationError para erro HTTP (perde o status code)
+throw new NodeOperationError(this.getNode(), errorMessage);
+```
+
+### Exemplo: Erro de lógica (operação não suportada)
+
+```typescript
+// Correto — usa NodeOperationError para validação
+throw new NodeOperationError(this.getNode(), `Operation ${operation} not supported`);
+```
+
+### Imports necessários
+
+Lembre-se de importar ambos no topo do arquivo:
+
+```typescript
+import {
+  // ... outros imports
+  JsonObject,
+  NodeApiError,
+  NodeOperationError,
+} from 'n8n-workflow';
 ```
 
 ---
 
-## 7. Rate Limiting
+## 7. Sem dependências externas (npm packages)
+
+O n8n Cloud **não permite** community nodes que importam pacotes npm externos. Isso bloqueia a publicação.
+
+```typescript
+// PROIBIDO — importa pacote externo
+import FormData from 'form-data';
+import axios from 'axios';
+import _ from 'lodash';
+
+// PERMITIDO — imports do n8n e do Node.js
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
+```
+
+### O que usar no lugar?
+
+| Pacote externo | Substituto nativo (Node 18+) |
+|---------------|------------------------------|
+| `form-data` | `FormData` global (já existe no Node.js) |
+| `axios` | `this.helpers.httpRequestWithAuthentication()` (helper do n8n) |
+| `node-fetch` | `fetch` global (já existe no Node.js) |
+
+### Como verificar?
+
+Olhe os `import` no topo do arquivo. **Somente** imports de `n8n-workflow` e arquivos locais do projeto são permitidos.
+
+---
+
+## 8. Sem dead code
+
+Código inalcançável (que nunca executa) deve ser removido. Isso é apontado na revisão do n8n.
+
+```typescript
+// Errado — break nunca executa (está depois do return)
+return [returnData];
+break;
+
+// Correto — apenas o return
+return [returnData];
+```
+
+Outros exemplos de dead code para evitar:
+- Variáveis declaradas mas nunca usadas
+- Blocos de código comentados (`// código antigo aqui...`)
+- Condições que nunca são verdadeiras
+
+---
+
+## 9. Rate Limiting
 
 Operations de leitura (`get*`) possuem rate limit de 5 minutos via `workflow.staticData`. Operations de criação (`create*`) **não** possuem rate limit.
 
@@ -169,7 +271,7 @@ Ao adicionar nova operation de leitura, ela será automaticamente limitada se o 
 
 ---
 
-## 8. Build e Validação
+## 10. Build e Validação
 
 Antes de fazer push, **sempre** executar:
 
@@ -180,16 +282,27 @@ npm run lint     # Verifica regras ESLint (incluindo regras n8n)
 
 ---
 
-## 9. Checklist para nova Operation
+## 11. Checklist para nova Operation
 
+Use esta checklist antes de abrir PR. Itens marcados com ⚠️ **bloqueiam publicação** no n8n Cloud.
+
+### Naming e UI
 - [ ] `name` em Title Case, sem repetir o resource
 - [ ] `action` em sentence case, sem artigos, repetindo o resource
 - [ ] `description` em sentence case, com artigos, repetindo o resource
 - [ ] Todos os parâmetros com `description` em inglês
+- [ ] ⚠️ Nenhum texto em português (nem entre parênteses)
 - [ ] Options em ordem alfabética pelo `name`
 - [ ] Options vazias usando `name: 'Any'`
+
+### Código
 - [ ] `displayOptions` configurado para o resource + operation correto
 - [ ] `pairedItem: { item: i }` no retorno dos dados
 - [ ] Chamada HTTP usando `httpRequestWithAuthentication`
-- [ ] Tratamento de erro com `try-catch` e parse do body
-- [ ] `npm run build` e `npm run lint` passando sem erros
+- [ ] ⚠️ Erros HTTP usando `NodeApiError` (não `NodeOperationError`)
+- [ ] ⚠️ Sem imports de pacotes npm externos
+- [ ] ⚠️ Sem dead code (break após return, variáveis não usadas)
+
+### Build
+- [ ] `npm run build` passando sem erros
+- [ ] `npm run lint` passando sem erros

@@ -49,7 +49,43 @@ Verifique TODOS os blocos de operation `{ name, value, action, description }` no
 
 ---
 
-### 4. Validacoes Adicionais
+### 4. n8n Cloud Verification — Regras obrigatorias para publicacao
+
+Estas regras sao exigidas pelo time do n8n para aprovacao em n8n Cloud. Violacoes bloqueiam a publicacao.
+
+#### 4a. Sem dependencias externas (npm packages)
+
+- **O node NAO pode importar pacotes npm externos** (ex: `import FormData from 'form-data'`)
+- n8n Cloud nao permite community nodes com dependencias externas
+- Use APIs nativas do Node.js (Node 18+) ou helpers built-in do n8n
+- Exemplos: use `FormData` global (nativo), nao o pacote `form-data`; use `fetch` global, nao `axios`
+- Verifique TODOS os `import` no topo do arquivo — somente imports de `n8n-workflow` e arquivos locais sao permitidos
+- Referencia: https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/
+
+#### 4b. NodeApiError para erros HTTP (nao NodeOperationError)
+
+- Operacoes que fazem chamadas HTTP e tratam erros **devem usar `NodeApiError`** (nao `NodeOperationError`)
+- `NodeOperationError` perde o status code HTTP e o contexto da resposta no painel de erros do n8n
+- Uso correto: `throw new NodeApiError(this.getNode(), { message, statusCode } as JsonObject, { message, httpCode })`
+- `NodeOperationError` deve ser reservado apenas para erros de validacao/logica (ex: operacao nao suportada)
+- Verifique TODOS os `throw new NodeOperationError` no arquivo — se o contexto e uma falha HTTP, deve ser `NodeApiError`
+- Referencia: https://docs.n8n.io/integrations/creating-nodes/build/reference/http-helpers/
+
+#### 4c. Sem dead code
+
+- Verifique codigo inalcancavel: `break` apos `return`, variaveis nao usadas, blocos de codigo morto
+- Exemplo: `return [returnData]; break;` — o `break` e inalcancavel e deve ser removido
+
+#### 4d. Sem termos em outros idiomas nas descriptions
+
+- Descriptions, placeholders e labels **devem estar 100% em ingles**
+- NAO incluir traducoes entre parenteses em outros idiomas (ex: "State registration (Inscricao Estadual)")
+- Se necessario dar contexto, use termos em ingles (ex: "State registration number for legal entities")
+- Referencia: https://docs.n8n.io/integrations/creating-nodes/build/reference/verification-guidelines/
+
+---
+
+### 5. Validacoes Adicionais
 
 - Options com `name: ''` (anti-pattern) — devem ter label descritivo
 - Verifique consistencia entre options do mesmo tipo (ex: se um filtro usa 'Any', todos devem)
@@ -117,17 +153,34 @@ Para determinar o REV:
 
 ---
 
-## 4. Validacoes Adicionais
+## 4. n8n Cloud Verification
+
+### 4a. Dependencias externas
+[Tabela: Linha | Import | Problema | Correcao — ou "OK — nenhuma dependencia externa encontrada"]
+
+### 4b. NodeApiError vs NodeOperationError
+[Tabela: Linha | Operacao | Erro atual | Problema | Correcao — ou "OK — todos os erros HTTP usam NodeApiError"]
+
+### 4c. Dead code
+[Tabela: Linha | Codigo | Problema — ou "OK — nenhum dead code encontrado"]
+
+### 4d. Termos em outros idiomas
+[Tabela: Linha | Campo | Texto atual | Correcao — ou "OK — nenhum termo em outro idioma"]
+
+---
+
+## 5. Validacoes Adicionais
 
 [Opcoes vazias, inconsistencias, erros gramaticais]
 
 ---
 
-## 5. Resumo de prioridades
+## 6. Resumo de prioridades
 
-1. **Alta** — [issues criticos]
-2. **Media** — [issues moderados]
-3. **Baixa** — [issues menores]
+1. **Critica** — [Bloqueiam publicacao no n8n Cloud: dependencias externas, etc]
+2. **Alta** — [issues criticos: NodeApiError, dead code]
+3. **Media** — [issues moderados: naming, idioma]
+4. **Baixa** — [issues menores: gramatica, consistencia]
 
 ---
 

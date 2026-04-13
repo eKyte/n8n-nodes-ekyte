@@ -105,6 +105,16 @@ Reference: https://docs.n8n.io/integrations/creating-nodes/build/reference/paire
 - Never mutate incoming data directly. Clone input items before modifying them and return new data objects
 - Always wrap API calls in try-catch with descriptive error messages parsed from the API response body
 
+### n8n Cloud Verification Rules
+
+These rules are enforced by the n8n team for Cloud approval. Violations block publication.
+
+- **No external npm dependencies**: Community nodes cannot import external packages (e.g. `form-data`, `axios`, `lodash`). Only `n8n-workflow` and local file imports are allowed. Use Node.js built-in APIs (Node 18+) instead — e.g. global `FormData`, global `fetch`
+- **NodeApiError for HTTP errors**: Use `NodeApiError` (not `NodeOperationError`) when throwing errors from HTTP responses. `NodeApiError` preserves HTTP status code and response context in the n8n error UI. Reserve `NodeOperationError` only for validation/logic errors (e.g. unsupported operation)
+- **No dead code**: Remove unreachable code such as `break` after `return`, unused variables, or commented-out blocks
+- **English-only UI text**: All descriptions, placeholders, and labels must be 100% in English. Do not include translations or terms in other languages, even in parentheses (e.g. avoid "State registration (Inscrição Estadual)" — use "State registration number" instead)
+- Reference: https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/
+
 ### Additional Standards
 
 - Include `usableAsTool: true` and detailed descriptions for AI agent compatibility
