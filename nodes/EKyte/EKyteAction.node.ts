@@ -2635,7 +2635,7 @@ export class EKyteAction implements INodeType {
 
 					const filterStatus = resolveMultiOptions(this.getNodeParameter('filterStatus', 0));
 					if (filterStatus) {
-						queryParams.filterStatus = filterStatus;
+						queryParams.TicketStatus = filterStatus;
 					}
 
 					const filterTicketType = resolveMultiOptions(

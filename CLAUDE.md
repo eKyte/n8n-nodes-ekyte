@@ -23,7 +23,7 @@ n8n community node package (`@ekyte/n8n-nodes-ekyte`) that integrates with the e
 
 ### Credentials (`credentials/EKyteApi.credentials.ts`)
 
-Single credential type using generic query string authentication with `apiKey` and `companyId`. Test endpoint at `https://apistaging.ekyte.com/n8n/polling/auth`.
+Single credential type using generic query string authentication with `apiKey` and `companyId`. Test endpoint at `https://api.ekyte.com/n8n/polling/auth`.
 
 ### Node (`nodes/EKyte/EKyteAction.node.ts`)
 
@@ -33,7 +33,7 @@ Single monolithic node file (~2400 lines) implementing the **resource-operation 
 - Each resource has operations (create, get, getAll, etc.)
 - Parameters use `displayOptions` to show/hide fields based on selected resource + operation
 - `usableAsTool: true` — the node is designed for AI agent consumption with detailed descriptions
-- API base URL defaults to `https://apistaging.ekyte.com/n8n` (configurable via hidden `baseUrl` param)
+- API base URL defaults to `https://api.ekyte.com/n8n` (configurable via hidden `baseUrl` param)
 
 ### Key Patterns
 
