@@ -2087,41 +2087,9 @@ export class EKyteAction implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const operation = this.getNodeParameter('operation', 0) as string;
-
-		const RATE_LIMIT_MINUTES = 5;
-
-		// Apply rate limit only to read operations (operations starting with "get")
-		if (operation.startsWith('get')) {
-			const staticData = this.getWorkflowStaticData('node');
-			const rateLimitKey = `lastCall_${operation}`;
-			const lastCallTime = staticData[rateLimitKey] as number;
-
-			if (lastCallTime) {
-				const now = Date.now();
-				const timeDiffMs = now - lastCallTime;
-				const timeDiffMinutes = Math.floor(timeDiffMs / (1000 * 60));
-
-				if (timeDiffMinutes < RATE_LIMIT_MINUTES) {
-					const remainingMinutes = RATE_LIMIT_MINUTES - timeDiffMinutes;
-					const remainingSeconds =
-						remainingMinutes * 60 - Math.floor((timeDiffMs % (1000 * 60)) / 1000);
-					throw new NodeOperationError(
-						this.getNode(),
-						`Minimum interval of ${RATE_LIMIT_MINUTES} minutes not respected for GET operation "${operation}". Try again in ${remainingSeconds} seconds.`,
-					);
-				}
-			}
-		}
-
 		const baseUrl = this.getNodeParameter('baseUrl', 0) as string;
 		let userEmail = '';
 		let initialExecutor = '';
-
-		// Helper function to register timestamp for read operations
-		const registerTimestamp = () => {
-			const staticData = this.getWorkflowStaticData('node');
-			staticData[`lastCall_${operation}`] = Date.now();
-		};
 
 		try {
 			let returnData: INodeExecutionData[] = [];
@@ -2388,7 +2356,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const notifications =
@@ -2397,7 +2364,6 @@ export class EKyteAction implements INodeType {
 						json: notification,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getBoards':
@@ -2411,7 +2377,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const boards = parseResponseBody(result.body);
@@ -2419,7 +2384,6 @@ export class EKyteAction implements INodeType {
 						json: board,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getWorkspaces':
@@ -2433,7 +2397,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const workspaces =
@@ -2442,7 +2405,6 @@ export class EKyteAction implements INodeType {
 						json: workspace,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getProjects':
@@ -2456,7 +2418,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const projects = parseResponseBody(result.body);
@@ -2464,7 +2425,6 @@ export class EKyteAction implements INodeType {
 						json: project,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getTasks':
@@ -2478,7 +2438,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const tasks = parseResponseBody(result.body);
@@ -2486,7 +2445,6 @@ export class EKyteAction implements INodeType {
 						json: task,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getTasksPhase':
@@ -2500,7 +2458,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const tasksPhase =
@@ -2509,7 +2466,6 @@ export class EKyteAction implements INodeType {
 						json: task,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getTask':
@@ -2524,7 +2480,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const task = parseResponseBody(result.body);
@@ -2534,7 +2489,6 @@ export class EKyteAction implements INodeType {
 							pairedItem: { item: 0 },
 						},
 					];
-					registerTimestamp();
 					return [returnData];
 
 				case 'getManyTasks':
@@ -2597,7 +2551,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const manyTasks = parseResponseBody(result.body);
@@ -2605,7 +2558,6 @@ export class EKyteAction implements INodeType {
 						json: taskItem,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getManyTickets': {
@@ -2686,7 +2638,6 @@ export class EKyteAction implements INodeType {
 
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const manyTasks = parseResponseBody(result.body);
@@ -2694,7 +2645,6 @@ export class EKyteAction implements INodeType {
 						json: taskItem,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 				}
 
@@ -2709,7 +2659,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const ticketsChanged =
@@ -2718,7 +2667,6 @@ export class EKyteAction implements INodeType {
 						json: ticket,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getTicketsClosed':
@@ -2732,7 +2680,6 @@ export class EKyteAction implements INodeType {
 					// Check for errors
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const ticketsClosed =
@@ -2741,7 +2688,6 @@ export class EKyteAction implements INodeType {
 						json: ticket,
 						pairedItem: { item: i },
 					}));
-					registerTimestamp();
 					return [returnData];
 
 				case 'getPerson':
@@ -2756,7 +2702,6 @@ export class EKyteAction implements INodeType {
 
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const person = parseResponseBody(result.body);
@@ -2766,7 +2711,6 @@ export class EKyteAction implements INodeType {
 							pairedItem: { item: 0 },
 						},
 					];
-					registerTimestamp();
 					return [returnData];
 
 				case 'getManyPersons':
@@ -2803,7 +2747,6 @@ export class EKyteAction implements INodeType {
 					});
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const persons = parseResponseBody(result.body);
@@ -2813,7 +2756,6 @@ export class EKyteAction implements INodeType {
 							pairedItem: { item: 0 },
 						},
 					];
-					registerTimestamp();
 					return [returnData];
 
 				case 'getManyTaskForms':
@@ -2848,7 +2790,6 @@ export class EKyteAction implements INodeType {
 					});
 					throwOnHttpError(this.getNode(), result, operation);
 					if (!result.body && result.body !== 0) {
-						registerTimestamp();
 						return [returnData];
 					}
 					const taskForms = parseResponseBody(result.body);
@@ -2858,7 +2799,6 @@ export class EKyteAction implements INodeType {
 							pairedItem: { item: 0 },
 						},
 					];
-					registerTimestamp();
 					return [returnData];
 
 
