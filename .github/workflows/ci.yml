@@ -1,0 +1,35 @@
+# Validates every PR into develop/master BEFORE merge (shift-left gate).
+# Wire "build" and "lint" as Required status checks in the develop/master rulesets
+# so a failing check blocks the merge.
+#
+# Note: the n8n verification scan (@n8n/scan-community-package) is NOT here — it scans
+# an already-published npm package (it runs `npm pack <pkg>@<version>` from the registry),
+# so it cannot run on unpublished PR code. It runs post-publish in publish.yml (scan-beta).
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint

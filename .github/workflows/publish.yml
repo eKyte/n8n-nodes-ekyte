@@ -1,0 +1,125 @@
+# Publishes @ekyte/n8n-nodes-ekyte to npm via npm Trusted Publishing (OIDC).
+# No NPM_TOKEN secret; provenance is emitted automatically. One workflow, two channels:
+#
+#   push to develop + version is a NEW  X.Y.Z-beta.N   -> dist-tag "beta"    (no gate)
+#   push to master  + version is a NEW  X.Y.Z (stable) -> dist-tag "latest"  (required-reviewer gate)
+#
+# A push that does not introduce a new publishable version is a no-op: no duplicate-publish
+# error, and no approval is requested (the gated job only runs when there is a real release).
+#
+# Versions are bumped manually on develop by the release manager (devs never touch versions):
+#   npm version preminor   --preid=beta   # open a cycle (minor)  -> 1.4.0-beta.0
+#   npm version prepatch   --preid=beta   # open a cycle (patch)  -> 1.4.1-beta.0
+#   npm version prerelease --preid=beta   # next beta in cycle    -> 1.4.0-beta.1 ...
+#   npm version patch                     # strip -beta to release -> 1.4.0  (then PR develop -> master)
+#
+# One-time setup (see repo docs):
+#   * npmjs.com > @ekyte/n8n-nodes-ekyte > Settings > Trusted Publishers:
+#       Organization: eKyte | Repository: n8n-nodes-ekyte | Workflow: publish.yml   (no environment)
+#   * GitHub > Settings > Environments > create "production" with required reviewers (gates latest).
+name: Publish to npm
+
+on:
+  push:
+    branches: [develop, master]
+
+concurrency:
+  group: publish-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      channel: ${{ steps.decide.outputs.channel }}
+      go: ${{ steps.decide.outputs.go }}
+      version: ${{ steps.decide.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decide channel and whether to publish
+        id: decide
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          BRANCH="${GITHUB_REF_NAME}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "package version $VERSION on branch $BRANCH"
+
+          # Channel is decided by branch + version shape.
+          if [[ "$BRANCH" == "develop" && "$VERSION" == *-beta* ]]; then
+            CHANNEL=beta
+          elif [[ "$BRANCH" == "master" && "$VERSION" != *-* ]]; then
+            CHANNEL=latest
+          else
+            echo "Branch/version combination is not publishable; no-op."
+            echo "channel=none" >> "$GITHUB_OUTPUT"
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+
+          # Skip if this exact version is already on npm.
+          PUBLISHED=$(npm view "@ekyte/n8n-nodes-ekyte@$VERSION" version 2>/dev/null || true)
+          if [ -n "$PUBLISHED" ]; then
+            echo "$VERSION already published; skipping."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish-beta:
+    needs: check
+    if: needs.check.outputs.go == 'true' && needs.check.outputs.channel == 'beta'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22' # provenance requires Node >= 22.14
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@latest # trusted publishing needs npm >= 11.5.1
+      - run: npm ci
+      - run: npm publish --access public --tag beta # prepublishOnly runs build + lint
+
+  # Validates the just-published beta against n8n's verification rules. The scanner only
+  # works on a published package, so this runs post-publish; latest is promoted from a
+  # scanned beta, so it is covered by the same source.
+  scan-beta:
+    needs: [check, publish-beta]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wait for npm to propagate the new version
+        run: sleep 20
+      - name: Scan the published beta against n8n verification rules
+        run: npx --yes @n8n/scan-community-package "@ekyte/n8n-nodes-ekyte@${{ needs.check.outputs.version }}"
+
+  publish-latest:
+    needs: check
+    if: needs.check.outputs.go == 'true' && needs.check.outputs.channel == 'latest'
+    runs-on: ubuntu-latest
+    environment: production # required reviewer here -> manual approval gate for latest
+    permissions:
+      contents: write # create the GitHub Release
+      id-token: write # OIDC trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm publish --access public # defaults to dist-tag latest
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ needs.check.outputs.version }}"
+          gh release create "v$VERSION" --title "v$VERSION" --generate-notes --verify-tag
