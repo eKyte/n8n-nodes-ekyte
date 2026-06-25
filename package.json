@@ -10,14 +10,14 @@
     "ekyte"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/ekyte/n8n-nodes-ekyte#readme",
+  "homepage": "https://github.com/eKyte/n8n-nodes-ekyte#readme",
   "author": {
     "name": "eKyte Team",
     "email": "dev@ekyte.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ekyte/n8n-nodes-ekyte.git"
+    "url": "https://github.com/eKyte/n8n-nodes-ekyte.git"
   },
   "engines": {
     "node": ">=20.15"
